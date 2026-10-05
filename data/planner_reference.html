@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Germany 2026 — LTV Scenario Planner</title>
+<style>
+:root{--navy:#12324a;--blue:#2563eb;--up:#7c3aed;--ink:#1a2027;--mut:#6a7783;--line:#e7ebf0;--bg:#eef1f5;--card:#fff;--pos:#0f9d58;--neg:#d64545}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding:0 22px}
+.hd{padding:26px 0 14px}h1{font-size:23px;margin:0 0 3px;color:var(--navy)}.hd p{margin:0;color:var(--mut);font-size:13px}
+.rbar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;box-shadow:0 3px 14px rgba(0,0,0,.18)}
+.rbin{max-width:960px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.rbin .item .l{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:#8fb8d4}
+.rbin .item .n{font-size:23px;font-weight:800;line-height:1.15}.rbin .item .d{font-size:12px;font-weight:700}
+.gpos{color:#8ff0bf}.gneg{color:#ffb4b4}.rbin .spacer{flex:1}.rbin .live{font-size:10.5px;color:#8fb8d4;display:flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%;background:#8ff0bf;display:inline-block}
+.seg{display:inline-flex;border:1px solid #3a5670;border-radius:8px;overflow:hidden}
+.seg button{border:0;border-right:1px solid #3a5670;padding:5px 11px;background:transparent;color:#cfe0ee;cursor:pointer;font-size:12.5px}
+.seg button:last-child{border-right:0}.seg button.on{background:#fff;color:var(--navy);font-weight:700}
+.step{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin:16px 0}
+.savebar{background:#eef4ff;border:1px solid #d3e1f7;border-radius:12px;padding:14px 18px;margin:16px 0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.savebar .t{font-weight:800;color:var(--navy);font-size:14px}
+.sh{display:flex;align-items:center;gap:11px;margin-bottom:4px}
+.snum{flex:none;width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.sh h2{font-size:16px;margin:0;color:var(--navy)}.sopt{font-size:11px;color:var(--mut);font-weight:600;background:#f0f2f5;padding:2px 8px;border-radius:10px}
+.hint{color:var(--mut);font-size:12.5px;margin:2px 0 14px 37px}
+.howto{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 2px}
+.howto .h{flex:1;min-width:170px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12.5px;color:#44515c}.howto .h b{color:var(--navy)}
+label.lb{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);font-weight:700;display:block;margin-bottom:5px}
+input[type=number]{font-size:15px;padding:8px 9px;border:1px solid #cdd4dc;border-radius:8px;width:130px;font-weight:600}
+.reset{margin-left:8px;font-size:12px;color:var(--blue);background:none;border:0;cursor:pointer}
+.btn{font-size:12px;padding:6px 11px;border:1px solid #cdd4dc;border-radius:8px;background:#fff;cursor:pointer;margin-left:6px}
+table.mix{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+table.mix th{text-align:right;padding:8px 8px;color:var(--mut);font-size:10.5px;text-transform:uppercase;border-bottom:2px solid var(--line)}th:first-child{text-align:left}
+table.mix td{padding:6px 8px;border-bottom:1px solid #f0f2f5;text-align:right}table.mix td:first-child{text-align:left;font-weight:600}
+table.mix input{width:66px;text-align:right;padding:5px 6px;font-size:13px;border:1px solid #cdd4dc;border-radius:6px}
+table.mix tr.tot td{border-top:2px solid var(--line);font-weight:800;color:var(--navy);border-bottom:none}
+.sumbad{color:#b5761c;font-weight:700}.sumok{color:var(--pos);font-weight:700}
+.controls{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;gap:16px;align-items:end;margin-top:6px}
+select{width:100%;font-size:14px;padding:8px 9px;border:1px solid #cdd4dc;border-radius:8px;font-weight:600}
+.sl{display:flex;flex-direction:column;gap:4px}.sl .row{display:flex;justify-content:space-between;align-items:baseline}
+.sl .val{font-size:15px;font-weight:700;color:var(--navy)}.sl .base{font-size:10.5px;color:var(--mut)}
+input[type=range]{width:100%;accent-color:var(--blue)}input[type=range].up{accent-color:var(--up)}
+.impact{margin-top:14px;background:#f0f7ff;border:1px solid #d3e4fb;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.impact .big{font-size:20px;font-weight:800;color:var(--navy)}
+.impact .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mut);font-weight:700}
+.impact .arrow{color:#9aa7b2;font-size:18px}
+.flexgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:14px}
+.ret{display:flex;gap:8px;margin-top:8px}.retc{flex:1;background:#f6f8fb;border:1px solid var(--line);border-radius:8px;padding:6px;text-align:center}
+.retc .m{font-size:10.5px;color:var(--mut)}.retc .s{font-size:13px;font-weight:700;color:var(--blue)}
+.ltvrow{display:flex;gap:8px}.ltvc{flex:1;border:1px solid var(--line);border-radius:9px;padding:9px;text-align:center}
+.ltvc .h{font-size:10.5px;color:var(--mut)}.ltvc .sc{font-size:16px;font-weight:800;color:var(--navy)}.ltvc .b{font-size:10.5px;color:var(--mut)}
+.chip{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;margin-top:1px}
+.posbg{background:#e6f5ec;color:var(--pos)}.negbg{background:#fbe9e9;color:var(--neg)}.flat{background:#eef1f4;color:var(--mut)}
+svg{width:100%;height:auto;display:block}
+input.name{font-size:14px;padding:9px 11px;border:1px solid #cdd4dc;border-radius:8px;width:230px}
+.saveb{font-size:13px;padding:9px 16px;border:0;border-radius:8px;background:var(--blue);color:#fff;cursor:pointer;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 14px}
+.chip2{display:inline-flex;align-items:center;gap:8px;border:1px solid #cdd4dc;border-radius:20px;padding:6px 8px 6px 13px;font-size:13px;cursor:pointer;background:#fff;font-weight:600}
+.chip2.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chip2 .x{width:17px;height:17px;border-radius:50%;background:#eef1f5;color:#6a7783;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;border:0;cursor:pointer}
+.chip2.active .x{background:#2c4a63;color:#fff}
+.empty{color:#9aa7b2;font-size:12.5px}
+.wcol{background:#eef6ff!important}
+.mut{color:#9aa7b2;font-size:11px}
+tr.best td{background:#eafaf0}
+.star{color:#0f9d58;font-weight:800}
+table.cmp{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:2px}
+table.cmp th{text-align:right;padding:8px 9px;color:var(--mut);font-size:10.5px;text-transform:uppercase;border-bottom:2px solid var(--line)}table.cmp th:first-child{text-align:left}
+table.cmp td{padding:8px 9px;border-bottom:1px solid #f0f2f5;text-align:right}table.cmp td:first-child{text-align:left;font-weight:600}
+table.cmp tr.base td{background:#f4f7fa}
+.pos{color:var(--pos)}.neg{color:var(--neg)}
+.subh{font-weight:700;color:var(--navy);font-size:13px;margin:20px 0 6px}
+table.sum{width:100%;border-collapse:collapse;font-size:12.5px}
+table.sum th{text-align:right;padding:7px 9px;color:var(--mut);font-size:10.5px;text-transform:uppercase;border-bottom:2px solid var(--line)}
+table.sum td{padding:6px 9px;border-bottom:1px solid #f0f2f5;text-align:right}table.sum td:first-child{text-align:left}
+tr.sec td{background:#f4f7fa;font-weight:700;color:var(--navy);font-size:10.5px;text-transform:uppercase}
+.foot{color:var(--mut);font-size:11px;margin:20px 0 60px;line-height:1.5}
+@media(max-width:800px){.controls{grid-template-columns:1fr 1fr}.flexgrid{grid-template-columns:1fr}.hint{margin-left:0}}
+</style></head><body>
+<div class="wrap"><div class="hd"><h1>LTV Scenario Planner</h1>
+<p>Build a 2026 acquisition plan, apply optimisation levers, and compare scenarios side by side. Values are <b>net of agency fees</b>, projected to five years, in euros.</p>
+<div style="margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px;color:#44515c;line-height:1.55"><b style="color:var(--navy)">The baseline.</b> The 2026 baseline is our projected full-year CPAs and acquisition volumes — 16,932 agency donors. Retention, upgrade rates and upgrade amounts are projected from historic donors. Prefer your own numbers? Use “Set my own baseline” in Step 1.</div></div></div>
+<div class="rbar"><div class="rbin">
+  <div class="item"><div class="n" style="font-size:17px">2026 Acquisitions</div><div class="l" id="r_don"></div></div>
+  <div class="item"><div class="l">Total net income (<span class="hzl">5-yr</span>)</div><div class="n" id="r_tot"></div></div>
+  <div class="item"><div class="l">vs baseline</div><div class="n" id="r_chg" style="font-size:19px"></div><div class="d" id="r_chgd"></div></div>
+  <div class="item"><div class="l">Net LTV</div><div class="n" id="r_ipa" style="font-size:19px"></div><div class="d" id="r_ipad"></div></div>
+  <div class="spacer"></div>
+  <div class="live"><span class="dot"></span>updates live as you edit</div>
+  <div class="item"><div class="l">Horizon</div><span class="seg" id="hz"><button data-h="1">1-yr</button><button data-h="3">3-yr</button><button data-h="5" class="on">5-yr</button></span></div>
+</div></div>
+<div class="wrap">
+ <div class="savebar" style="display:block">
+   <div class="t" style="margin-bottom:8px">Create a scenario</div>
+   <div class="howto" style="margin:0">
+   <div class="h"><b>1.</b> Input your acquisition volumes and the split across monthly gift value bands.</div>
+   <div class="h"><b>2.</b> Set the agency fee cap and, if you like, apply optimisation levers.</div>
+   <div class="h"><b>3.</b> Once done, hit Save scenario and compare against the baseline below.</div>
+ </div></div>
+
+ <div class="step">
+  <div class="sh"><div class="snum">1</div><h2>Set your acquisition volumes</h2></div>
+  <div class="hint">Enter the number of donors in each monthly gift band — whole donors only. Share %, net LTV and net income update automatically.</div>
+  <div style="margin-left:37px">
+    <div style="margin-bottom:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span class="mut" id="baseNote" style="font-size:11.5px"></span><span style="flex:1"></span><button class="saveb" id="saveBaseB" style="display:none">Save as baseline</button><button class="btn" id="ownBaseB" style="margin:0">Set my own baseline</button><button class="btn" id="mixReset" style="margin:0">Reset to 2026 baseline</button></div>
+    <table class="mix"><thead><tr><th>Monthly gift band</th><th>Donors</th><th>Share %</th><th>Net LTV</th><th>Net income</th></tr></thead>
+      <tbody id="mixBody"></tbody><tfoot id="mixFoot"></tfoot></table>
+  </div>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="snum">2</div><h2>Cost per Acquisition and Agency Fee Caps</h2></div>
+  <div class="hint">The fee an agency charges is a multiple of the donor's monthly gift. Raise the cap to model paying more for higher-value donors.</div>
+  <div style="margin-left:37px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><label class="lb" style="margin:0">Fee cap</label><span style="font-size:14px">€</span><input id="capIn" type="number" min="0" step="5" style="width:84px"><span style="font-size:11.5px;color:var(--mut)">per month</span><button class="reset" id="capReset">reset</button></div>
+    <div class="hint" style="margin:14px 0 4px 0"><b style="color:var(--navy)">Agencies with a price cap:</b> What each monthly gift band costs to recruit (CPA) with this cap:</div>
+    <div class="ret" id="cpaRowCap" style="margin-top:2px"></div>
+    <div class="hint" style="margin:14px 0 4px 0"><b style="color:var(--navy)">Agencies without a price cap:</b> What each monthly gift band costs to recruit (CPA):</div>
+    <div class="ret" id="cpaRowUncap" style="margin-top:2px"></div>
+    <div class="hint" style="margin:14px 0 4px 0"><b style="color:var(--navy)">Average CPA across all agencies:</b></div>
+    <div class="ret" id="cpaRow" style="margin-top:2px"></div>
+  </div>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="snum">3</div><h2>Optimisation levers</h2><span class="sopt">optional · saved with the scenario</span></div>
+  <div class="hint">Pick a monthly gift band and adjust a lever — 12-month retention, upgrade rate or upgrade amount. Your adjustments stay in place when you switch bands, so you can optimise more than one band in the same scenario.</div>
+  <div style="margin-left:37px;margin-bottom:6px"><button class="btn" id="resetAllB" style="margin:0">Reset all levers</button> <span class="mut" style="font-size:11.5px">note: this will reset all levers to baseline across all gift value bands</span></div>
+  <div style="margin-left:37px">
+   <div class="controls">
+    <div><label class="lb">Monthly gift band</label><select id="band"></select></div>
+    <div class="sl"><label class="lb">12-mo retention</label><div class="row"><span class="val" id="rv"></span><span class="base" id="rb"></span></div><input type="range" id="rSl" step="0.5"><button class="reset" id="rReset">reset</button></div>
+    <div class="sl"><label class="lb">Upgrade rate</label><div class="row"><span class="val" id="uv"></span><span class="base" id="ub"></span></div><input type="range" class="up" id="uSl" step="0.5"><button class="reset" id="uReset">reset</button></div>
+    <div class="sl"><label class="lb">Upgrade amount (€/mo)</label><div class="row"><span class="val" id="av"></span><span class="base" id="ab"></span></div><input type="range" class="up" id="aSl" step="0.5"><button class="reset" id="aReset">reset</button></div>
+   </div>
+   <div class="impact">
+     <div><div class="lbl">Net income from <span id="bnI"></span> band (<span class="hzl">5-yr</span>)</div>
+       <span class="big" id="bandBase"></span> <span class="arrow">→</span> <span class="big" id="bandSc"></span> <span class="chip" id="bandDelta"></span></div>
+     <div class="spacer" style="flex:1"></div>
+     <div style="text-align:right"><div class="lbl">Effect on total income</div><span class="big" id="totDelta"></span></div>
+   </div>
+   <div class="flexgrid">
+     <div><div class="hint" style="margin:0 0 4px 0">Retention curve — dashed = baseline, solid = your scenario</div><div id="surv"></div><div class="ret" id="retRead"></div></div>
+     <div><div class="hint" style="margin:0 0 4px 0">Net LTV, <span id="bn"></span></div><div class="ltvrow" id="ltvRow"></div></div>
+   </div>
+  </div>
+ </div>
+
+ <div class="savebar">
+   <span class="t">Save this scenario &nbsp;→</span>
+   <input class="name" id="scName" placeholder="Name it, e.g. Moderate push"><button class="saveb" id="saveB">Save scenario</button><button class="btn" id="csvB">Export to CSV</button>
+ </div>
+
+ <div class="step">
+  <div class="sh"><div class="snum">4</div><h2>Your scenarios vs the baseline</h2></div>
+  <div class="hint">Saved scenarios compared side by side against the 2026 baseline.</div>
+  <div style="margin-left:37px">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div class="chips" id="chips" style="margin:2px 0"></div><button class="btn" id="clearB" style="display:none;margin:0">Clear all</button></div>
+    <div class="subh">At a glance — which scenario earns most</div>
+    <div style="overflow-x:auto"><table class="cmp" id="cmpTable"></table></div>
+    <div class="subh">Scenario comparisons</div>
+    <div style="overflow-x:auto"><table class="cmp" id="detailTable"></table></div>
+  </div>
+ </div>
+ <p class="foot" id="foot"></p>
+</div>
+<script>
+const CH={"def": "F2F (agency)", "channels": ["F2F (agency)"], "agencies": [{"name": "Trust", "factor": 19.97, "share": 0.4911, "caps": true}, {"name": "Apollon", "factor": 24.01, "share": 0.2048, "caps": false}, {"name": "Activate", "factor": 20.86, "share": 0.1579, "caps": true}, {"name": "Wesser", "factor": 29.65, "share": 0.1461, "caps": false}], "cap": 20, "data": {"F2F (agency)": {"bands": ["€5-10", "€10-20", "€20-30", "€30-50", "€50-100"], "p": {"€5-10": {"r3": 0.8369, "r12": 0.7088, "r24": 0.6027, "r36": 0.5368, "r48": 0.4851, "r60": 0.4284, "uprate": 0.0624, "upamt": 3.79, "fg": 7.83, "vol": 878, "ltv1_obs": 81.0, "ltv3_obs": 208.4, "ltv5_obs": 309.1, "n": 601}, "€10-20": {"r3": 0.7984, "r12": 0.5974, "r24": 0.4872, "r36": 0.4339, "r48": 0.3921, "r60": 0.3463, "uprate": 0.0364, "upamt": 6.51, "fg": 12.22, "vol": 12999, "ltv1_obs": 114.6, "ltv3_obs": 274.1, "ltv5_obs": 398.9, "n": 8895}, "€20-30": {"r3": 0.797, "r12": 0.5796, "r24": 0.483, "r36": 0.4302, "r48": 0.3887, "r60": 0.3433, "uprate": 0.0461, "upamt": 9.17, "fg": 20.07, "vol": 2836, "ltv1_obs": 187.1, "ltv3_obs": 447.3, "ltv5_obs": 652.1, "n": 1941}, "€30-50": {"r3": 0.7481, "r12": 0.458, "r24": 0.3756, "r36": 0.3346, "r48": 0.3023, "r60": 0.267, "uprate": 0.0394, "upamt": 11.55, "fg": 30.48, "vol": 191, "ltv1_obs": 247.0, "ltv3_obs": 547.3, "ltv5_obs": 782.6, "n": 131}, "€50-100": {"r3": 0.623, "r12": 0.5082, "r24": 0.4168, "r36": 0.3712, "r48": 0.3354, "r60": 0.2962, "uprate": 0.0286, "upamt": 37.5, "fg": 52.23, "vol": 28, "ltv1_obs": 404.2, "ltv3_obs": 985.2, "ltv5_obs": 1440.6, "n": 19}}}}};const HY={1:12,3:36,5:60};let CAPV=(CH.cap!=null?CH.cap:20);function cpaOf(band,cap){let g=P[band].fg,c=0;CH.agencies.forEach(a=>{c+=a.share*a.factor*(a.caps?Math.min(g,cap):g);});return c;}function grpCpa(band,cap,isCap){let g=P[band].fg,n=0,d=0;CH.agencies.forEach(a=>{if(!!a.caps===isCap){n+=a.share*a.factor*(isCap?Math.min(g,cap):g);d+=a.share;}});return d?n/d:0;}let curCh=CH.def;const BANDS=CH.data[curCh].bands;
+let P=CH.data[curCh].p,totalObs=0,baseShare={};
+function recompCh(){P=CH.data[curCh].p;totalObs=BANDS.reduce((a,b)=>a+P[b].vol,0);BANDS.forEach(b=>baseShare[b]=totalObs?P[b].vol/totalObs*100:0);}
+recompCh();
+function Hf(p,m){const A=[[0,0],[3,p.r3],[12,p.r12],[24,p.r24],[36,p.r36],[48,p.r48],[60,p.r60]];
+ const H=A.map((a,i)=>[a[0], i===0?0:-Math.log(Math.min(Math.max(a[1],1e-4),0.9999))]);
+ if(m>=60)return H[6][1];
+ for(let i=1;i<H.length;i++){if(m<=H[i][0]){const lo=H[i-1],hi=H[i];return lo[1]+(hi[1]-lo[1])*(m-lo[0])/(hi[0]-lo[0]);}}
+ return H[6][1];}
+function Sarr(p,k){let s=[1];for(let m=1;m<=60;m++)s.push(Math.exp(-k*Hf(p,m)));return s;}
+function area(S,m0,m1){let t=0;for(let m=m0;m<=m1;m++)t+=S[m];return t;}
+const money=v=>{const n=Math.round(v);return (n<0?'-€':'€')+Math.abs(n).toLocaleString();};
+const mm=v=>{let n=Math.round(v),a=Math.abs(n),c=a>=1e6?((a/1e6).toFixed(2)+'m'):a>=1e3?((a/1e3).toFixed(0)+'k'):(''+a.toLocaleString());return (n<0?'-€':'€')+c;};
+const pct=v=>(v*100).toFixed(1)+'%';const fmtInt=v=>Math.round(v).toLocaleString();
+let state={band:BANDS[2],h:'5',counts:{},levers:{}};
+BANDS.forEach(b=>{state.counts[b]=P[b].vol;state.levers[b]={rM12:P[b].r12*100,urate:P[b].uprate*100,uamt:P[b].upamt};});
+function baseLv(b){return {rM12:P[b].r12*100,urate:P[b].uprate*100,uamt:P[b].upamt};}
+function lvOf(sc,b){return (sc.levers&&sc.levers[b])?sc.levers[b]:baseLv(b);}
+function copyLevers(src){const o={};BANDS.forEach(b=>o[b]=src&&src[b]?{...src[b]}:baseLv(b));return o;}
+let scenarios=[],activeIdx=null,showAssump=false,customBase=null,settingBase=false;
+function baseCap(){return customBase?customBase.cap:CH.cap;}
+function baseName(){return customBase?"Baseline (your own)":"Baseline (2026 plan)";}
+function toggleAssump(){showAssump=!showAssump;render();}
+const bandSel=document.getElementById('band');BANDS.forEach(b=>{let o=document.createElement('option');o.value=b;o.textContent=b;bandSel.appendChild(o);});bandSel.value=state.band;
+function buildMix(){document.getElementById('mixBody').innerHTML=BANDS.map((b,i)=>`<tr><td>${b}</td><td><input type="number" id="cnt${i}" min="0" step="1"></td><td id="shr${i}"></td><td id="ltvd${i}"></td><td id="inc${i}"></td></tr>`).join('');BANDS.forEach((b,i)=>{document.getElementById('cnt'+i).oninput=e=>{state.counts[b]=Math.max(0,Math.round(+e.target.value||0));render();};});}
+buildMix();
+function baseOf(){return P[state.band];}
+function scLTVof(sc,band,hy,cap){cap=(cap==null?CAPV:cap);const H=HY[hy];const p=P[band];const lv=lvOf(sc,band);const k=(-Math.log(Math.min(Math.max(lv.rM12,0.1),99.9)/100))/(-Math.log(p.r12));const Sb=Sarr(p,1),Ss=Sarr(p,k);const ratio=area(Ss,1,H)/area(Sb,1,H);let up=(hy>1)?(((lv.urate/100)-p.uprate)*lv.uamt*area(Ss,13,H)):0;return p['ltv'+hy+'_obs']*ratio+up-cpaOf(band,cap);}
+function volOf(sc,b){return sc.counts[b]||0;}
+function totOf(sc){return BANDS.reduce((s,b)=>s+(sc.counts[b]||0),0);}
+function incomeOf(sc,hy,cap){return BANDS.reduce((s,b)=>s+scLTVof(sc,b,hy,cap)*volOf(sc,b),0);}
+function liveScn(){return {name:'Scenario in progress',counts:{...state.counts},levers:copyLevers(state.levers)};}
+function baseIncome(hy){return incomeOf(baselineScn(),hy,baseCap());}
+function setRanges(){const p=baseOf();const r=document.getElementById('rSl');r.min=Math.max(2,p.r12*100-15).toFixed(1);r.max=Math.min(99,p.r12*100+15).toFixed(1);const u=document.getElementById('uSl');u.min=0;u.max=Math.max(20,p.uprate*100+15).toFixed(1);const a=document.getElementById('aSl');a.min=0;a.max=Math.max(20,p.upamt*3).toFixed(1);a.step=0.5;}
+function syncSliders(){const lv=state.levers[state.band];document.getElementById('rSl').value=lv.rM12;document.getElementById('uSl').value=lv.urate;document.getElementById('aSl').value=lv.uamt;}
+function initSliders(){setRanges();syncSliders();}
+function initCounts(){BANDS.forEach((b,i)=>{state.counts[b]=P[b].vol;document.getElementById('cnt'+i).value=P[b].vol;});}
+function delTd(base,sc,fmt,pts){const d=sc-base,cls=Math.abs(d)<1e-9?'':(d>0?'pos':'neg');let t=pts?((d>=0?'+':'')+d.toFixed(1)+' pts'):((d>=0?'+':'')+fmt(d));return `<td class="${cls}">${Math.abs(d)<1e-9?'–':t}</td>`;}
+function chipHTML(base,sc){const d=sc-base,dp=base?d/base*100:0,cls=Math.abs(d)<1?'flat':(d>0?'posbg':'negbg');return `<span class="chip ${cls}">${d>=0?'+':''}${mm(d)} (${dp>=0?'+':''}${dp.toFixed(1)}%)</span>`;}
+function flexDesc(sc){let out=[];BANDS.forEach(b=>{const p=P[b],lv=lvOf(sc,b);let a=[];if(Math.abs(lv.rM12-p.r12*100)>0.05)a.push('ret '+lv.rM12.toFixed(0)+'%');if(Math.abs(lv.urate-p.uprate*100)>0.05)a.push('upg '+lv.urate.toFixed(1)+'%');if(Math.abs(lv.uamt-p.upamt)>0.05)a.push(money(lv.uamt)+'/mo');if(a.length)out.push(b+': '+a.join(', '));});return out.length?out.join(' · '):'—';}
+
+function render(){const p=baseOf();const hy=+state.h;const live=liveScn();
+ document.querySelectorAll('.hzl').forEach(e=>e.textContent=hy+'-yr');
+ const tot=totOf(live);BANDS.forEach((b,i)=>{const sh=tot?state.counts[b]/tot*100:0;document.getElementById('shr'+i).textContent=sh.toFixed(1)+'%';document.getElementById('inc'+i).textContent=mm(scLTVof(live,b,hy)*state.counts[b]);document.getElementById('ltvd'+i).textContent=money(scLTVof(live,b,hy));});
+ document.getElementById('mixFoot').innerHTML=`<tr class="tot"><td>Total</td><td>${fmtInt(tot)}</td><td>${tot?'100%':'—'}</td><td></td><td>${mm(incomeOf(live,hy))}</td></tr>`;
+ const cpaCell=(b,v)=>`<div class="retc"><div class="m">${b}</div><div class="s">${money(v)}</div></div>`;
+ document.getElementById('cpaRowCap').innerHTML=BANDS.map(b=>cpaCell(b,grpCpa(b,CAPV,true))).join('');
+ document.getElementById('cpaRowUncap').innerHTML=BANDS.map(b=>cpaCell(b,grpCpa(b,CAPV,false))).join('');
+ document.getElementById('cpaRow').innerHTML=BANDS.map(b=>cpaCell(b,cpaOf(b,CAPV))).join('');
+ const lv=state.levers[state.band];
+ document.getElementById('rv').textContent=pct(lv.rM12/100);document.getElementById('rb').textContent='base '+pct(p.r12);
+ document.getElementById('uv').textContent=lv.urate.toFixed(1)+'%';document.getElementById('ub').textContent='base '+pct(p.uprate);
+ document.getElementById('av').textContent=money(lv.uamt);document.getElementById('ab').textContent='base '+money(p.upamt);
+ document.getElementById('bn').textContent=state.band;document.getElementById('bnI').textContent=state.band;
+ const k=(-Math.log(lv.rM12/100))/(-Math.log(p.r12));const Sb=Sarr(p,1),Ss=Sarr(p,k);
+ const sM3=Math.exp(-k*(-Math.log(p.r3))),sM24=Math.exp(-k*(-Math.log(p.r24)));drawSurv(Sb,Ss);
+ document.getElementById('retRead').innerHTML=[['M3',p.r3,sM3],['M12',p.r12,lv.rM12/100],['M24',p.r24,sM24]].map(x=>`<div class="retc"><div class="m">${x[0]} · base ${pct(x[1])}</div><div class="s">${pct(x[2])}</div></div>`).join('');
+ document.getElementById('ltvRow').innerHTML=[1,3,5].map(y=>{const sc=scLTVof(live,state.band,y),ob=P[state.band]['ltv'+y+'_obs']-cpaOf(state.band,CAPV),d=sc-ob,dp=ob?d/ob*100:0,cls=Math.abs(d)<1?'flat':(d>0?'posbg':'negbg');return `<div class="ltvc"><div class="h">${y}-yr</div><div class="sc">${money(sc)}</div><div class="b">base ${money(ob)}</div><span class="chip ${cls}">${d>=0?'+':''}${dp.toFixed(1)}%</span></div>`;}).join('');
+ // LIVE band-income impact (holds current volume, flexed vs unflexed LTV)
+ const bandVol=volOf(live,state.band);const bBase=(P[state.band]['ltv'+hy+'_obs']-cpaOf(state.band,CAPV))*bandVol,bSc=scLTVof(live,state.band,hy)*bandVol;
+ document.getElementById('bandBase').textContent=mm(bBase);document.getElementById('bandSc').textContent=mm(bSc);
+ document.getElementById('bandDelta').outerHTML=`<span class="chip" id="bandDelta">${chipHTML(bBase,bSc).replace('<span class="chip ','').replace(/^[^>]*>/,'')}</span>`;
+ document.getElementById('bandDelta').className='chip '+(Math.abs(bSc-bBase)<1?'flat':(bSc>bBase?'posbg':'negbg'));
+ document.getElementById('bandDelta').textContent=`${bSc-bBase>=0?'+':''}${mm(bSc-bBase)}`;
+ // result bar (portfolio)
+ const ti=incomeOf(live,hy),bi=baseIncome(hy),ipa=ti/(tot||1),bipa=bi/(totOf(baselineScn())||1);
+ document.getElementById('r_don').textContent=fmtInt(tot)+' donors';
+ document.getElementById('r_tot').textContent=mm(ti);
+ const chg=ti-bi;document.getElementById('r_chg').textContent=(chg>=0?'+':'')+mm(chg);document.getElementById('r_chg').className='n '+(Math.abs(chg)<1?'':(chg>0?'gpos':'gneg'));
+ document.getElementById('r_chgd').innerHTML=`<span class="${chg>0?'gpos':(chg<0?'gneg':'')}">${bi?((chg>=0?'+':'')+(chg/bi*100).toFixed(1)+'%'):''}</span>`;
+ document.getElementById('r_ipa').textContent=money(ipa);
+ const dip=ipa-bipa;document.getElementById('r_ipad').innerHTML=`<span class="${dip>0?'gpos':(dip<0?'gneg':'')}">${dip>=0?'+':''}${money(dip)} vs base</span>`;
+ const td=document.getElementById('totDelta');td.textContent=(chg>=0?'+':'')+mm(chg);td.className='big '+(Math.abs(chg)<1?'':(chg>0?'pos':'neg'));
+  renderScen();
+ document.getElementById('foot').textContent="How it works: each donor's five-year value is projected from how our 2024 donors behaved (retention and upgrades), and the agency fee is then taken off. The fee is the agency's factor times the monthly gift — Trust and Activate cap the gift at the fee cap. Net income adds this up across all donors. Levers can be applied to any number of gift bands; the mix assumes no capacity limit.";
+}
+function baselineScn(){const c={};BANDS.forEach(b=>c[b]=customBase?(customBase.counts[b]||0):P[b].vol);return {name:'Baseline',counts:c,levers:customBase?copyLevers(customBase.levers):null};}
+function renderScen(){const hy=+state.h,bi=baseIncome(hy);
+ document.getElementById('clearB').style.display=scenarios.length?'inline-block':'none';
+ document.getElementById('chips').innerHTML = scenarios.length ? scenarios.map((s,i)=>`<span class="chip2 ${i==activeIdx?'active':''}" onclick="loadScenario(${i})">${s.name}<button class="x" onclick="event.stopPropagation();deleteScenario(${i})">×</button></span>`).join('') : '<span class="empty">No saved scenarios yet — build a plan above, name it, and hit Save.</span>';
+ let rows=[{name:baseName(),sc:null}].concat(scenarios.map(s=>({name:s.name,sc:s})));
+ const incs=rows.map(r=>r.sc?incomeOf(r.sc,hy):bi);const maxI=incs.indexOf(Math.max(...incs));
+ let h=`<thead><tr><th>Scenario</th><th>Total donors</th><th>Optimisations</th><th>Net income (${hy}-yr)</th><th>Net LTV / donor</th><th>Net income vs baseline</th></tr></thead><tbody>`;
+ rows.forEach((r,idx)=>{let inc=incs[idx],don,fx;
+   if(!r.sc){don=totOf(baselineScn());fx='—';}
+   else{don=totOf(r.sc);fx=flexDesc(r.sc);}
+   const d=inc-bi,cls=Math.abs(d)<1?'':(d>0?'pos':'neg');const rcls=(!r.sc?'base':'')+(idx==maxI&&rows.length>1?' best':'');const act=(r.sc&&idx-1==activeIdx)?' style="background:#eaf2ff"':'';
+   h+=`<tr class="${rcls}"${act}><td>${idx==maxI&&rows.length>1?'<span class="star">\u2605</span> ':''}${r.name}</td><td>${fmtInt(don)}</td><td style="text-align:left;color:#5b6b78;font-size:11.5px">${fx}</td><td>${mm(inc)}</td><td>${money(inc/don)}</td><td class="${cls}">${!r.sc?'\u2013':((d>=0?'+':'')+mm(d)+' ('+(d>=0?'+':'')+(d/bi*100).toFixed(0)+'%)')}</td></tr>`;});
+ h+='</tbody>';document.getElementById('cmpTable').innerHTML=h;
+ renderDetail(hy);
+}
+function renderDetail(hy){const bi=baseIncome(hy);
+ const cols=[{name:baseName(),sc:baselineScn(),base:true}].concat(scenarios.map(s=>({name:s.name,sc:s}))).concat([{name:'Scenario in progress (not saved)',sc:liveScn(),working:true}]);
+ let h='<thead><tr><th>Metric</th>'+cols.map(c=>`<th class="${c.working?'wcol':''}">${c.name}</th>`).join('')+'</tr></thead><tbody>';
+ const span=cols.length+1;
+ const sec=t=>`<tr class="sec"><td colspan="${span}">${t}</td></tr>`;
+ const rowr=(lbl,cells)=>`<tr><td>${lbl}</td>`+cells.map((c,i)=>`<td class="${cols[i].working?'wcol':''}">${c}</td>`).join('')+'</tr>';
+ const rowl=(lbl,cells)=>`<tr><td>${lbl}</td>`+cells.map((c,i)=>`<td class="${cols[i].working?'wcol':''}" style="text-align:left">${c}</td>`).join('')+'</tr>';
+ h+=sec('Acquisition plan');
+ h+=rowr('Total acquisitions',cols.map(c=>fmtInt(totOf(c.sc))));
+ BANDS.forEach(b=>{h+=rowr(b,cols.map(c=>{let v=volOf(c.sc,b),T=totOf(c.sc),sh=T?v/T*100:0;return fmtInt(v)+' <span class="mut">('+sh.toFixed(0)+'%)</span>';}));});
+ h+=`<tr class="sec"><td colspan="${span}" style="cursor:pointer" onclick="toggleAssump()">Band assumptions <span class="mut" style="text-transform:none;font-weight:600">12-mo retention · upgrade rate · upgrade €/mo</span><span style="float:right">${showAssump?'hide ▲':'show ▼'}</span></td></tr>`;
+ if(showAssump){BANDS.forEach(b=>{h+=rowr(b,cols.map(c=>{
+  const p=P[b];const lv2=lvOf(c.sc,b);
+  const r=lv2.rM12,u=lv2.urate,a=lv2.uamt;
+  const w=(v,bv,f)=>Math.abs(v-bv)>0.05?`<b style="color:#2563eb">${f(v)}</b>`:f(v);
+  return w(r,p.r12*100,v=>v.toFixed(0)+'%')+' · '+w(u,p.uprate*100,v=>v.toFixed(1)+'%')+' · '+w(a,p.upamt,v=>'€'+(+v).toFixed(2));
+ }));});}
+ h+=sec('Optimisations');
+ h+=rowl('Optimisation levers applied',cols.map(c=>c.base?'\u2014':`<span class="mut">${flexDesc(c.sc)}</span>`));
+ h+=sec('Outcome ('+hy+'-yr)');
+ h+=rowr('Net income',cols.map(c=>`<b>${mm(incomeOf(c.sc,hy,c.base?baseCap():CAPV))}</b>`));
+ h+=rowr('Net LTV per donor',cols.map(c=>money(incomeOf(c.sc,hy,c.base?baseCap():CAPV)/(totOf(c.sc)||1))));
+ h+=rowr('Avg CPA',cols.map(c=>{const cap=c.base?baseCap():CAPV;const T=totOf(c.sc)||1;return money(BANDS.reduce((s2,b)=>s2+cpaOf(b,cap)*volOf(c.sc,b),0)/T);}));
+ h+=rowr('Net income vs baseline',cols.map(c=>{let d=incomeOf(c.sc,hy,c.base?baseCap():CAPV)-bi,cls=Math.abs(d)<1?'':(d>0?'pos':'neg');return c.base?'\u2013':`<span class="${cls}">${d>=0?'+':''}${mm(d)} (${d>=0?'+':''}${(d/bi*100).toFixed(0)}%)</span>`;}));
+ h+='</tbody>';document.getElementById('detailTable').innerHTML=h;
+}
+function saveScenario(){let nm=document.getElementById('scName').value.trim()||('Scenario '+(scenarios.length+1));
+ const snap={name:nm,counts:{...state.counts},levers:copyLevers(state.levers)};
+ const ex=scenarios.findIndex(s=>s.name.toLowerCase()===nm.toLowerCase());
+ if(ex>=0){scenarios[ex]=snap;activeIdx=ex;}else{scenarios.push(snap);activeIdx=scenarios.length-1;}
+ document.getElementById('scName').value='';render();
+ document.getElementById('detailTable').scrollIntoView({behavior:'smooth',block:'center'});}
+function loadScenario(i){const sc=scenarios[i];state.counts={...sc.counts};state.levers=copyLevers(sc.levers);activeIdx=i;
+ BANDS.forEach((b,j)=>document.getElementById('cnt'+j).value=sc.counts[b]||0);
+ setRanges();syncSliders();render();}
+function deleteScenario(i){scenarios.splice(i,1);if(activeIdx===i)activeIdx=null;else if(activeIdx>i)activeIdx--;render();}
+function clearAll(){scenarios=[];activeIdx=null;render();}
+function csvEsc(v){v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function buildCSV(){
+ const cols=[{name:baseName(),sc:baselineScn(),base:true}].concat(scenarios.map(s2=>({name:s2.name,sc:s2}))).concat([{name:'Scenario in progress (not saved)',sc:liveScn()}]);
+ const capFor=c2=>c2.base?baseCap():CAPV;
+ const rows=[['Monthly gift band','KPI'].concat(cols.map(c2=>c2.name))];
+ const push=(band,kpi,fn)=>rows.push([band,kpi].concat(cols.map(fn)));
+ push('All bands','Total acquisitions (donors)',c2=>totOf(c2.sc));
+ push('All bands','Agency fee cap (EUR/month)',c2=>capFor(c2));
+ BANDS.forEach(b=>{
+  push(b,'Donors',c2=>volOf(c2.sc,b));
+  push(b,'Share of donors (%)',c2=>{const T=totOf(c2.sc);return T?(volOf(c2.sc,b)/T*100).toFixed(1):'0';});
+  push(b,'12-mo retention (%)',c2=>lvOf(c2.sc,b).rM12.toFixed(1));
+  push(b,'Upgrade rate (%)',c2=>lvOf(c2.sc,b).urate.toFixed(1));
+  push(b,'Upgrade amount (EUR/month)',c2=>(+lvOf(c2.sc,b).uamt).toFixed(2));
+  push(b,'CPA (EUR)',c2=>Math.round(cpaOf(b,capFor(c2))));
+  push(b,'Net LTV 5-yr (EUR)',c2=>Math.round(scLTVof(c2.sc,b,5,capFor(c2))));
+  push(b,'Net income 5-yr (EUR)',c2=>Math.round(scLTVof(c2.sc,b,5,capFor(c2))*volOf(c2.sc,b)));
+ });
+ [1,3,5].forEach(y=>push('All bands','Net income '+y+'-yr (EUR)',c2=>Math.round(incomeOf(c2.sc,y,capFor(c2)))));
+ push('All bands','Net LTV per donor 5-yr (EUR)',c2=>Math.round(incomeOf(c2.sc,5,capFor(c2))/(totOf(c2.sc)||1)));
+ push('All bands','Avg CPA (EUR)',c2=>{const T=totOf(c2.sc)||1;return Math.round(BANDS.reduce((s2,b)=>s2+cpaOf(b,capFor(c2))*volOf(c2.sc,b),0)/T);});
+ const bi5=baseIncome(5);
+ push('All bands','Net income vs baseline 5-yr (EUR)',c2=>c2.base?0:Math.round(incomeOf(c2.sc,5,CAPV)-bi5));
+ return rows.map(r2=>r2.map(csvEsc).join(',')).join('\r\n');
+}
+function exportCSV(){const csv='\uFEFF'+buildCSV();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='LTV_scenarios_Germany_2026.csv';a.click();}
+function drawSurv(Sb,Ss){const w=520,h=190,pad=34,base=h-22;let s=`<svg viewBox="0 0 ${w} ${h}">`;
+ for(let g=0;g<=4;g++){let y=base-(base-8)*g/4;s+=`<line x1="${pad}" y1="${y}" x2="${w-6}" y2="${y}" stroke="#eef1f4"/><text x="${pad-6}" y="${y+3}" text-anchor="end" font-size="9" fill="#8a97a3">${g*25}%</text>`;}
+ [0,12,24,36,48,60].forEach(mm=>{let x=pad+(w-pad-8)*mm/60;s+=`<text x="${x}" y="${base+13}" text-anchor="middle" font-size="9" fill="#5b6b78">${mm}m</text>`;});
+ function pa(S,dash,col){let d='';for(let m=0;m<=60;m++){let x=pad+(w-pad-8)*m/60,y=base-(base-8)*S[m];d+=(m?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)+' ';}return `<path d="${d}" fill="none" stroke="${col}" stroke-width="2.1" ${dash}/>`;}
+ s+=pa(Sb,'stroke-dasharray="5 4"','#9aa7b2')+pa(Ss,'','#2563eb')+'</svg>';document.getElementById('surv').innerHTML=s;}
+bandSel.onchange=e=>{state.band=e.target.value;initSliders();render();};
+document.getElementById('rSl').oninput=e=>{state.levers[state.band].rM12=+e.target.value;render();};
+document.getElementById('uSl').oninput=e=>{state.levers[state.band].urate=+e.target.value;render();};
+document.getElementById('aSl').oninput=e=>{state.levers[state.band].uamt=+e.target.value;render();};
+document.getElementById('rReset').onclick=()=>{state.levers[state.band].rM12=baseOf().r12*100;syncSliders();render();};
+document.getElementById('uReset').onclick=()=>{state.levers[state.band].urate=baseOf().uprate*100;syncSliders();render();};
+document.getElementById('aReset').onclick=()=>{state.levers[state.band].uamt=baseOf().upamt;syncSliders();render();};
+document.getElementById('mixReset').onclick=()=>{customBase=null;settingBase=false;document.getElementById('saveBaseB').style.display='none';document.getElementById('baseNote').textContent='';initCounts();render();};
+document.getElementById('ownBaseB').onclick=()=>{settingBase=true;BANDS.forEach((b,i)=>{state.counts[b]=0;document.getElementById('cnt'+i).value='';});document.getElementById('saveBaseB').style.display='inline-block';document.getElementById('baseNote').textContent='Enter your own baseline volumes — and set any retention/upgrade levers in Step 3 — then hit Save as baseline.';render();};
+document.getElementById('saveBaseB').onclick=()=>{customBase={counts:{...state.counts},cap:CAPV,levers:copyLevers(state.levers)};settingBase=false;document.getElementById('saveBaseB').style.display='none';document.getElementById('baseNote').textContent='Comparing against your own baseline — Reset to 2026 baseline clears it.';render();};
+document.getElementById('resetAllB').onclick=()=>{BANDS.forEach(b=>state.levers[b]=baseLv(b));syncSliders();render();};
+document.getElementById('csvB').onclick=exportCSV;
+document.getElementById('capReset').onclick=()=>{CAPV=(CH.cap!=null?CH.cap:20);document.getElementById('capIn').value=CAPV;render();};
+document.querySelectorAll('#hz button').forEach(b=>b.onclick=()=>{state.h=b.dataset.h;document.querySelectorAll('#hz button').forEach(x=>x.classList.remove('on'));b.classList.add('on');render();});
+document.getElementById('saveB').onclick=saveScenario;
+document.getElementById('clearB').onclick=clearAll;
+document.getElementById('scName').addEventListener('keydown',e=>{if(e.key==='Enter')saveScenario();});
+document.getElementById('capIn').value=CAPV;document.getElementById('capIn').oninput=e=>{CAPV=Math.max(0,+e.target.value||0);render();};
+initSliders();initCounts();render();
+</script></body></html>

@@ -1,0 +1,13 @@
+Lato and Oswald are licensed under the SIL Open Font License, Version 1.1.
+
+Lato    — Copyright (c) 2010-2014 by tyPoland Lukasz Dziedzic
+          (team@latofonts.com), with Reserved Font Name "Lato".
+Oswald  — Copyright (c) 2016 The Oswald Project Authors
+          (https://github.com/googlefonts/OswaldFont)
+
+Full licence: https://openfontlicense.org
+
+These are the Save the Children International brand fonts. They are stored
+here, and embedded in the generated report, so the page is self-contained and
+no reader's browser calls a font server. The master files are also on the
+Content Hub (CH1673848).
