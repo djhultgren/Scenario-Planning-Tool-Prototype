@@ -53,7 +53,8 @@ def money(v) -> str:
 # ------------------------------------------------------------- volumes -----
 def volumes_by_band(summary) -> str:
     """Horizontal bars: how many donors we acquire at each gift amount."""
-    bands = [b for b in C.BAND_ORDER if b in summary.index]
+    bands = [b for b in C.BAND_ORDER
+             if b in summary.index and b != C.POOLED_BAND]
     W, H, L, R, T, B = 880, 336, 76, 230, 16, 42
     pw, ph = W - L - R, H - T - B
     total = summary["donors"].sum()
@@ -76,7 +77,8 @@ def volumes_by_band(summary) -> str:
 # ----------------------------------------------------------- LTV by band ---
 def ltv_by_band(summary, column="gross_ltv", low_base=None) -> str:
     """Horizontal bars of lifetime value, with thin bands faded."""
-    bands = [b for b in C.BAND_ORDER if b in summary.index]
+    bands = [b for b in C.BAND_ORDER
+             if b in summary.index and b != C.POOLED_BAND]
     W, H, L, R, T, B = 880, 336, 76, 150, 16, 42
     pw, ph = W - L - R, H - T - B
     mx = summary[column].max() * 1.04
@@ -192,14 +194,22 @@ def export_json(obj) -> str:
 # offline and when emailed.
 # ==========================================================================
 SLICER_CSS = """
-.slicer{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+/* The chart filters. Real buttons in a labelled group, so they are reachable
+   by keyboard and announced as a set, with targets big enough for a thumb. */
+.slicer{display:flex;flex-wrap:wrap;gap:var(--s2);margin:0 0 var(--s4)}
 .slicer button{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;
- padding:5px 12px;border-radius:999px;border:1px solid var(--line);
- background:#fff;color:var(--mut);line-height:1.3}
+ min-height:34px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);
+ background:#fff;color:#55687A;line-height:1.3;transition:background .15s,color .15s}
 .slicer button:hover{border-color:var(--red);color:var(--red)}
-.slicer button.on{background:var(--red);border-color:var(--red);color:#fff}
+.slicer button[aria-pressed="true"]{background:var(--red);border-color:var(--red);
+ color:#fff}
+.slabel{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);
+ font-weight:700;margin:0 0 var(--s2)}
 .states>.st{display:none}.states>.st.on{display:block}
-@media print{.slicer{display:none}.states>.st{display:block}
+.states>.st .ttl{font-size:14px;font-weight:700;color:var(--ink);margin:0 0 var(--s2)}
+@media(max-width:700px){.slicer button{min-height:40px;padding:8px 16px}}
+@media(prefers-reduced-motion:reduce){.slicer button{transition:none}}
+@media print{.slicer,.slabel{display:none}.states>.st{display:block}
  .states>.st:not(.on){display:none}}
 """
 
@@ -209,7 +219,7 @@ document.querySelectorAll('.slicer').forEach(function(bar){
  bar.addEventListener('click',function(e){
   var b=e.target.closest('button');if(!b)return;
   Array.prototype.forEach.call(bar.children,function(x){
-   x.classList.toggle('on',x===b);});
+   x.setAttribute('aria-pressed',x===b?'true':'false');});
   document.querySelectorAll('.states[data-g="'+g+'"]>.st').forEach(function(d){
    d.classList.toggle('on',d.getAttribute('data-k')===b.getAttribute('data-k'));});
  });
@@ -225,8 +235,8 @@ def sliced(group: str, states: list) -> str:
     shown when the page opens.
     """
     buttons = "".join(
-        '<button data-k="%s"%s>%s</button>'
-        % (_esc(k), ' class="on"' if i == 0 else "", _esc(k))
+        '<button type="button" data-k="%s" aria-pressed="%s">%s</button>'
+        % (_esc(k), "true" if i == 0 else "false", _esc(k))
         for i, (k, _, _, _) in enumerate(states))
     panels = ""
     for i, (key, title, body, caption) in enumerate(states):
@@ -235,20 +245,26 @@ def sliced(group: str, states: list) -> str:
                       '<div class="ttl">%s</div>' % title if title else "",
                       body,
                       "<figcaption>%s</figcaption>" % caption if caption else ""))
-    return ('<div class="slicer" data-g="%s">%s</div>'
-            '<div class="states" data-g="%s">%s</div>' % (group, buttons, group, panels))
+    return ('<p class="slabel" id="sl-%s">Filter this chart</p>'
+            '<div class="slicer" role="group" aria-labelledby="sl-%s" data-g="%s">%s</div>'
+            '<div class="states" data-g="%s">%s</div>'
+            % (group, group, group, buttons, group, panels))
 
 
 # ------------------------------------------------- lifetime value by band ---
-def ltv_bars(values: dict, counts: dict, mx: float, thin_below: int) -> str:
+def ltv_bars(values: dict, counts: dict, mx: float, thin_below: int,
+             bands: list | None = None) -> str:
     """
     Horizontal lifetime-value bars, one row per gift amount.
 
-    Bands with no donors in the slice say so rather than vanishing, and bands
-    resting on few historic donors are faded and labelled, so a reader can
-    see at a glance which bars carry weight.
+    `bands` sets which rows appear; leaving it out draws every band. A band in
+    the list but missing from `values` says it has no donors in this slice
+    rather than vanishing without explanation. Bands resting on few historic
+    donors are faded and labelled, so a reader can see at a glance which bars
+    carry weight.
     """
-    bands = list(C.BAND_ORDER)
+    bands = list(bands if bands is not None
+                 else [b for b in C.BAND_ORDER if b != C.POOLED_BAND])
     W, H, L, R, T, B = 880, 336, 76, 150, 16, 42
     pw, ph = W - L - R, H - T - B
     rh = ph / len(bands)
@@ -408,7 +424,7 @@ def cap_steps(rows: list, cap: float) -> str:
         for j, (v, colour, lbl) in enumerate((
                 (income, C.GREEN, "extra income"),
                 (0.0, C.RED, "extra fee, capped"),
-                (fee_full, C.MUT, "fee without the cap"))):
+                (fee_full, C.MUT, "extra fee without the cap"))):
             xb = x + w * j
             h = T + ph - py(v)
             out.append(rect(xb, py(v), w * 0.86, max(h, 2), colour, 3))
@@ -420,7 +436,7 @@ def cap_steps(rows: list, cap: float) -> str:
                     "over ten years, and what the agency is paid for it"
                     % cap, 11.5, C.MUT))
     key = [("extra income", C.GREEN), ("extra fee, capped", C.RED),
-           ("fee without the cap", C.MUT)]
+           ("extra fee without the cap", C.MUT)]
     for j, (lbl, colour) in enumerate(key):
         kx = L + j * 200
         out.append(rect(kx, H - 26, 11, 11, colour, 2))
@@ -511,7 +527,7 @@ def reserve(rows: list) -> str:
         out.append('<circle cx="%.1f" cy="%.1f" r="8" fill="%s"/>' % (px(hi_r), y, C.NAVY))
         out.append(text((px(be_r) + px(hi_r)) / 2, y - 18,
                         "%d %s to spare" % (pts, "pt" if pts == 1 else "pts"),
-                        13, C.GREEN, "middle", True))
+                        13, C.NAVY, "middle", True))
         out.append(text(px(hi_r) + 14, y + 5, "%d%%" % round(hi_r), 12, C.NAVY, bold=True))
         out.append(text(px(be_r) - 14, y + 5, "%d%%" % round(be_r), 12, C.RED,
                         "end", True))
@@ -523,75 +539,94 @@ def reserve(rows: list) -> str:
 # ------------------------------------------------------- what we modelled ---
 def behaviour_panel(rows: list) -> str:
     """
-    One column per gift amount: who we acquire, and how they behave.
+    One panel per measure, one bar per gift amount.
 
     Volumes and age describe the donors we are acquiring now; retention and
     upgrades describe how donors at that amount have behaved historically.
-    Keeping both on one panel makes the seam between them visible.
+    Keeping both on one figure makes the seam between them visible, and giving
+    each measure its own panel lets the shape of each be read down the column
+    without the units fighting each other.
     """
-    labels = ["2026 donors", "Avg age", "12m retention", "Upgrade rate",
-              "Avg upgrade"]
-    W, L, T = 880, 132, 34
-    cw = (W - L - 14) / max(len(rows), 1)
-    rh = 30
-    H = T + rh * (len(labels) + 1) + 16
+    panels = [
+        ("2026 donors", "donors", lambda v: format(int(round(v)), ",d")),
+        ("Avg age", "age", lambda v: "%d" % round(v) if v else "—"),
+        ("12m retention", "r12", lambda v: "%d%%" % round(v * 100)),
+        ("Upgrade rate", "uprate", lambda v: "%.1f%%" % (v * 100)),
+        ("Avg upgrade", "upamt", lambda v: "€%.2f" % v),
+    ]
+    W, L, gap, pad = 880, 118, 11, 12
+    T, rh = 54, 30
+    H = T + rh * len(rows) + 18
+    cw = (W - L - 14 - gap * (len(panels) - 1)) / len(panels)
+
     out = [rect(0, 0, W, H, C.LIGHT, 8)]
-    for j, lbl in enumerate(labels):
-        out.append(text(L - 14, T + rh * (j + 1) + rh * 0.66, lbl, 11.5,
-                        C.MUT, "end"))
     for i, row in enumerate(rows):
-        x = L + cw * i
-        out.append(rect(x + 3, T - 2, cw - 6, rh * 0.94, C.BAND_COLOUR.get(row["band"], C.MUT), 5))
-        out.append(text(x + cw / 2, T + rh * 0.62, row["band"], 12.5, "#fff",
-                        "middle", True))
-        cells = [
-            format(int(round(row["donors"])), ",d"),
-            "%d" % round(row["age"]) if row["age"] else "—",
-            "%d%%" % round(row["r12"] * 100),
-            "%.1f%%" % (row["uprate"] * 100),
-            "€%.2f" % row["upamt"],
-        ]
-        out.append(text(x + cw / 2, T + rh * 1.62 - 13,
-                        "%s%% of donors" % (("%.1f" % row["share"]) if row["share"] < 1
-                                            else ("%.0f" % row["share"])),
-                        9.5, C.MUT, "middle"))
-        for j, cell in enumerate(cells):
-            out.append(text(x + cw / 2, T + rh * (j + 1) + rh * 0.66, cell, 12,
-                            C.NAVY, "middle", True))
+        y = T + rh * i + rh * 0.5
+        out.append(text(L - 14, y + 1, row["band"], 12.5, C.NAVY, "end", True))
+        share = row["share"]
+        out.append(text(L - 14, y + 13, "%s%% of donors"
+                        % (("%.1f" % share) if share < 1 else ("%.0f" % share)),
+                        9, C.MUT, "end"))
+
+    for j, (label, key, fmt) in enumerate(panels):
+        x0 = L + (cw + gap) * j
+        colour = C.PANEL_COLOUR[j % len(C.PANEL_COLOUR)]
+        out.append(rect(x0, T - 34, cw, rh * len(rows) + 40, "#fff", 7))
+        out.append(text(x0 + pad, T - 14, label, 11.5, C.NAVY, bold=True))
+        values = [float(r.get(key) or 0.0) for r in rows]
+        mx = max(values + [1e-9])
+        # Room for the value, so a long label never runs outside the panel.
+        room = max(len(fmt(v)) for v in values) * 6.4 + 10
+        bw = cw - pad * 2 - room
+        for i, v in enumerate(values):
+            y = T + rh * i + rh * 0.22
+            out.append(rect(x0 + pad, y, max(bw * v / mx, 2), rh * 0.46,
+                            colour, 3))
+            out.append(text(x0 + pad + max(bw * v / mx, 2) + 8, y + rh * 0.36,
+                            fmt(v), 11, C.NAVY, bold=True))
     return svg(W, H, "".join(out))
-
-
 # ------------------------------------------------------------ age profile ---
 def age_panel(rows: list) -> str:
     """
     Retention and value side by side, by age at sign-up.
 
-    The bar is twelve-month retention, the figure beneath it is ten-year gross
-    value. They rise together, which is the argument of the whole section.
+    Both are measured on the €10 ask, so the only thing changing across the
+    chart is the age of the donor. The left bar is twelve-month retention; the
+    right bar is ten-year gross value on its own scale, because the two are in
+    different units and sharing one axis would flatten whichever is smaller.
     """
-    W, H, L, R, T, B = 880, 330, 60, 20, 26, 74
+    W, H, L, R, T, B = 880, 350, 60, 70, 34, 74
     pw, ph = W - L - R, H - T - B
     bw = pw / max(len(rows), 1)
-    py = lambda v: T + ph * (1 - v / 100.0)
+    mxv = max([r["gross"] for r in rows] + [1.0]) * 1.12
+    pyr = lambda v: T + ph * (1 - v / 100.0)
+    pyv = lambda v: T + ph * (1 - v / mxv)
     out = [rect(0, 0, W, H, C.LIGHT, 8)]
     for g in range(0, 101, 20):
-        out.append(line(L, py(g), L + pw, py(g)))
-        out.append(text(L - 9, py(g) + 4, "%d%%" % g, 10.5, C.MUT, "end"))
+        out.append(line(L, pyr(g), L + pw, pyr(g)))
+        out.append(text(L - 9, pyr(g) + 4, "%d%%" % g, 10.5, C.MUT, "end"))
     for i, row in enumerate(rows):
-        x = L + bw * i + bw * 0.24
-        w = bw * 0.52
-        v = row["r12"] * 100
-        out.append(rect(x, py(v), w, T + ph - py(v), C.NAVY, 4))
-        out.append(text(x + w / 2, py(v) - 7, "%d%%" % round(v), 12, C.NAVY,
+        x = L + bw * i
+        w = bw * 0.30
+        xr = x + bw * 0.16
+        xv = xr + w + bw * 0.08
+        r = row["r12"] * 100
+        out.append(rect(xr, pyr(r), w, T + ph - pyr(r), C.NAVY, 4))
+        out.append(text(xr + w / 2, pyr(r) - 7, "%d%%" % round(r), 11.5, C.NAVY,
                         "middle", True))
-        out.append(text(x + w / 2, T + ph + 20, money(row["gross"]), 13, C.RED,
-                        "middle", True))
-        out.append(text(x + w / 2, T + ph + 38, row["ab"], 12.5, C.NAVY,
-                        "middle", True))
-        out.append(text(x + w / 2, T + ph + 53, "%d%% of donors" % round(row["share"] * 100),
-                        10.5, C.MUT, "middle"))
-    out.append(text(L, T - 10, "12m retention", 11, C.NAVY, bold=True))
-    out.append(text(L + pw, T - 10, "Gross LTV (10y)", 11, C.RED, "end", True))
+        out.append(rect(xv, pyv(row["gross"]), w, T + ph - pyv(row["gross"]),
+                        C.RED, 4))
+        out.append(text(xv + w / 2, pyv(row["gross"]) - 7, money(row["gross"]),
+                        11.5, C.RED, "middle", True))
+        out.append(text(L + bw * i + bw / 2, T + ph + 20, row["ab"], 12.5,
+                        C.NAVY, "middle", True))
+        out.append(text(L + bw * i + bw / 2, T + ph + 36,
+                        "%d%% of donors" % round(row["share"] * 100), 10.5,
+                        C.MUT, "middle"))
+    out.append(text(L, T - 12, "12m retention", 11, C.NAVY, bold=True))
+    out.append(text(L + pw, T - 12, "Gross LTV (10y)", 11, C.RED, "end", True))
+    out.append(text(L + pw / 2, H - 8, "Both measured on a €10 a month ask", 11,
+                    C.MUT, "middle"))
     return svg(W, H, "".join(out))
 
 
@@ -600,31 +635,35 @@ def payback(rows: list, months=C.HORIZON_MONTHS) -> str:
     """
     How long a donor takes to cover the fee we paid to acquire them.
 
-    `rows` is a list of (band, months to break even, return multiple). Shorter
-    is better; the multiple at the end says what the donor goes on to return
-    on that fee over the full ten years.
+    `rows` is a list of (band, months to break even, return multiple). Only the
+    well-evidenced amounts appear, so the comparison is between price points we
+    can actually say something about. The slowest to pay back is picked out in
+    red; shorter is better.
     """
-    W, rh, L, R, T, B = 880, 52, 76, 210, 36, 46
+    W, rh, L, R, T, B = 880, 60, 90, 250, 24, 52
     H = T + rh * max(len(rows), 1) + B
     pw = W - L - R
-    mx = max([r[1] for r in rows] + [12]) * 1.12
+    mx = max([r[1] for r in rows if r[1]] + [12]) * 1.12
+    mx = max(6 * round(mx / 6), 6)
     px = lambda v: L + pw * v / mx
-    out = [rect(0, 0, W, H, C.LIGHT, 8)]
+    slowest = max((r for r in rows if r[1]), key=lambda r: r[1], default=None)
+    out = [rect(0, 0, W, H, "#fff", 0)]
     for g in range(0, int(mx) + 1, 6):
-        out.append(line(px(g), T - 8, px(g), T + rh * len(rows)))
+        out.append(line(px(g), T - 4, px(g), T + rh * len(rows)))
         out.append(text(px(g), T + rh * len(rows) + 20, g, 10.5, C.MUT, "middle"))
-    out.append(text(L + pw / 2, H - 8, "Months to cover the acquisition fee", 11,
+    out.append(text(L + pw / 2, H - 10, "Months to cover the acquisition fee", 11,
                     C.MUT, "middle"))
     for i, (band, mth, roi) in enumerate(rows):
-        y = T + rh * i + rh * 0.24
-        out.append(text(L - 12, y + rh * 0.38, band, 12.5, C.NAVY, "end", True))
+        y = T + rh * i + rh * 0.26
+        worst = slowest is not None and band == slowest[0]
+        colour = C.RED if worst else C.NAVY
+        out.append(text(L - 14, y + rh * 0.36, band, 13, colour, "end", True))
         if mth is None or mth > months:
-            out.append(text(L + 6, y + rh * 0.38,
+            out.append(text(L + 6, y + rh * 0.36,
                             "never covers the fee within ten years", 11.5, C.MUT))
             continue
-        out.append(rect(L, y, max(px(mth) - L, 1), rh * 0.5,
-                        C.BAND_COLOUR.get(band, C.MUT), 4))
-        out.append(text(px(mth) + 10, y + rh * 0.38,
-                        "%d months  ·  %.2fx return" % (round(mth), roi),
-                        12, C.NAVY, bold=True))
+        out.append(rect(L, y, max(px(mth) - L, 1), rh * 0.48, colour, 3))
+        out.append(text(px(mth) + 12, y + rh * 0.36,
+                        "%d months · %.2fx ROI" % (round(mth), roi), 12.5, colour,
+                        bold=True))
     return svg(W, H, "".join(out))

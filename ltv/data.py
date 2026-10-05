@@ -67,6 +67,35 @@ def monthly_equivalent(amount: float, frequency: str) -> float:
     return amount * per_year / 12.0
 
 
+# ------------------------------------------------------- identifying data ---
+# Nothing in this model needs to know who a donor is. Supporter and pledge
+# identifiers, dates of birth and exact pledge dates are therefore dropped the
+# moment a file is read, so they cannot reach a figure, an export or a copy of
+# the repository - whatever the source extract happens to contain.
+IDENTIFIER_HINTS = ("supporterid", "supporter id", "pledge id", "pledgeid",
+                    "constituentid", "accountid", "contactid", "customerid",
+                    "donorid", "dob", "dateofbirth", "date of birth", "birth",
+                    "name", "email", "phone", "mobile", "address", "postcode",
+                    "postalcode", "zip", "iban", "bankaccount", "sortcode")
+# `Id` on its own, and any exact date, go the same way.
+IDENTIFIER_EXACT = ("id",)
+
+
+def drop_identifiers(frame: pd.DataFrame, keep=()) -> pd.DataFrame:
+    """Remove anything that identifies a person, or could help to."""
+    out = []
+    for col in frame.columns:
+        name = str(col).strip().lower()
+        if col in keep:
+            continue
+        flat = name.replace("_", "").replace("-", "").replace(" ", "")
+        if (name in IDENTIFIER_EXACT
+                or any(h.replace(" ", "") in flat for h in IDENTIFIER_HINTS)
+                or "datetime64" in str(frame[col].dtype)):
+            out.append(col)
+    return frame.drop(columns=out)
+
+
 # ------------------------------------------------------------ historic -----
 def historic() -> pd.DataFrame:
     """
@@ -75,7 +104,7 @@ def historic() -> pd.DataFrame:
     Returns one row per donor with `band`, `ab` (age band), `age`, retention
     columns and first-year value.
     """
-    d = pd.read_excel(C.HISTORIC_FILE)
+    d = drop_identifiers(pd.read_excel(C.HISTORIC_FILE))
     d = d[(d["ReportingChannel"] == C.CHANNEL) &
           (d["Inhouse/Agency"] == C.AGENCY_FLAG)].copy()
 
@@ -99,12 +128,11 @@ def cohort() -> pd.DataFrame:
     Adds `agency` (None where the source code is a venue rather than an
     agency), `band`, `age` and `ab`.
     """
-    d = pd.read_excel(C.COHORT_FILE, sheet_name=C.COHORT_SHEET)
+    d = drop_identifiers(pd.read_excel(C.COHORT_FILE, sheet_name=C.COHORT_SHEET))
     d = d.rename(columns={
         "RegularGivingPledgeGiftAmount": "amount",
         "RegularGivingPledgeFrequency": "freq",
         "RegularGivingPledgeSourceCode": "source_code",
-        "RegularGivingPledgeDate": "pledge_date",
     })
     d["monthly"] = [monthly_equivalent(a, f)
                     for a, f in zip(d["amount"], d["freq"])]

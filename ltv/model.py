@@ -279,7 +279,7 @@ class Model:
         return self.gross_ltv(band, ab, months)
 
     def blended_cpa(self, band: str) -> float:
-        """What the four agencies charge at a band, weighted by their volumes."""
+        """What the agencies charge at a band, weighted by their volumes."""
         vols = self.volumes()
         n = float(vols[band].sum()) if band in vols.columns else 0.0
         if n <= 0:

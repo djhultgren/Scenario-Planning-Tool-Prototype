@@ -20,8 +20,10 @@ from .model import Model
 
 AGE_KEYS = ["All"] + list(C.AGE_ORDER)
 
-# Steps above the cap that Figure 9 prices.
-CAP_STEPS = [25, 30, 35, 40]
+# Steps above the cap that Figure 9 prices. €25 is left out: it rests on 375
+# historic donors with unusually low retention, so the step reads as a quirk of
+# that sample rather than as anything about the price point.
+CAP_STEPS = [30, 35, 40]
 
 
 def _age_label(key: str) -> str:
@@ -44,8 +46,14 @@ def volumes(m: Model, bands) -> str:
 def behaviour(m: Model, bands) -> str:
     total = float(bands["donors"].sum())
     rows = []
-    for band in C.BAND_ORDER:
+    for band in C.CHART_ORDER:
         if band not in bands.index:
+            continue
+        # "Other" is a catch-all of high-value outliers rather than a price
+        # point we could ask for, and its average upgrade is large enough to
+        # flatten every other bar on that panel. The share percentages are
+        # still taken against all donors, so the column does not add to 100.
+        if band == "Other":
             continue
         curve = m.curve_at(band)
         uprate, upamt = m.upgrade_rates(band)
@@ -64,12 +72,15 @@ def behaviour(m: Model, bands) -> str:
 # ------------------------------------------ 3 · gross LTV, sliced by age ----
 def _ltv_states(m: Model, net: bool) -> list:
     """Every age view of the lifetime-value bars, on one shared scale."""
+    withheld = _schedule_driven(m)
     values, counts = {}, {}
     for key in AGE_KEYS:
         ab = None if key == "All" else key
         values[key] = {}
         counts[key] = {}
-        for band in C.BAND_ORDER:
+        for band in C.CHART_ORDER:
+            if ab is not None and band in withheld:
+                continue
             gross = m.gross_ltv_at(band, ab)
             if gross is None:
                 continue
@@ -81,9 +92,9 @@ def _ltv_states(m: Model, net: bool) -> list:
 
     mx = max([v for d in values.values() for v in d.values()] + [1.0]) * 1.04
     what = "net" if net else "gross"
-    tail = ("Net of a blended CPA across the four agencies. Faded bars marked "
+    tail = ("Net of a blended CPA across the %d agencies. Faded bars marked "
             "&ldquo;low base&rdquo; rest on fewer than %d historic donors."
-            % C.LOW_BASE) if net else (
+            % (len(m.cost_table), C.LOW_BASE)) if net else (
            "Faded bars marked &ldquo;low base&rdquo; rest on fewer than %d "
            "historic donors and should be read as indicative." % C.LOW_BASE)
 
@@ -91,11 +102,23 @@ def _ltv_states(m: Model, net: bool) -> list:
     for key in AGE_KEYS:
         if not values[key]:
             continue
+        note = "%s %s" % (_age_note(key), tail)
+        if key != "All" and withheld:
+            note += (" %s %s not shown by age: most of those donors pay annually "
+                     "or quarterly, and the retention schedules behind them are a "
+                     "single set of rates used at every age. That is sound across "
+                     "all donors, so these bands appear in the <i>All</i> view, "
+                     "but inside an age band it would report the assumption back "
+                     "rather than what the donors did."
+                     % (", ".join(withheld),
+                        "are" if len(withheld) > 1 else "is"))
         states.append((
             key,
-            "Donor %s LTV (10 years) — %s" % (what, _age_label(key)),
-            G.ltv_bars(values[key], counts[key], mx, C.LOW_BASE),
-            "%s %s" % (_age_note(key), tail),
+            "Donor %s LTV (10 years) - %s" % (what, _age_label(key)),
+            G.ltv_bars(values[key], counts[key], mx, C.LOW_BASE,
+                       bands=[b for b in C.CHART_ORDER
+                              if not (key != "All" and b in withheld)]),
+            note,
         ))
     return states
 
@@ -110,40 +133,53 @@ def net_ltv(m: Model, bands) -> str:
 
 # --------------------------------------------- 4 · value by age at signup ---
 def by_age(m: Model, bands) -> str:
+    """
+    Value and retention by age, holding the ask at €10.
+
+    Keeping the amount fixed is the point of the chart: it isolates age, so a
+    reader cannot mistake the pattern for an effect of older donors being asked
+    for more.
+    """
     profile = m.age_profile()
     rows = []
     for ab in C.AGE_ORDER:
         share = profile.get(ab, 0.0)
-        if share <= 0:
+        gross = m.gross_ltv_at("€10", ab)
+        curve = m.curve_at("€10", ab)
+        if share <= 0 or gross is None or curve is None:
             continue
-        num = den = 0.0
-        r12n = r12d = 0.0
-        for band in C.BAND_ORDER:
-            n = float(bands.loc[band, "donors"]) if band in bands.index else 0.0
-            if n <= 0:
-                continue
-            gross = m.gross_ltv_at(band, ab)
-            curve = m.curve_at(band, ab)
-            if gross is None or curve is None:
-                continue
-            num += n * gross
-            den += n
-            r12n += n * float(curve[12])
-            r12d += n
-        if den <= 0:
-            continue
-        rows.append({"ab": ab, "share": share, "gross": num / den,
-                     "r12": r12n / r12d})
+        rows.append({"ab": ab, "share": share, "gross": gross,
+                     "r12": float(curve[12])})
     return G.age_panel(rows)
 
 
 # -------------------------------------------- 5 · retention, sliced by age --
+def _schedule_driven(m: Model) -> list:
+    """
+    Bands whose retention is mostly set by the payment-frequency schedules.
+
+    Those schedules are all-age averages, so they describe the whole donor base
+    honestly but cannot be split by age. A band where most donors pay annually
+    is therefore shown only in the all-ages view: in an age band it would be
+    reporting the assumption back rather than anything measured.
+    """
+    out = []
+    for band in C.CHART_ORDER:
+        mix = m.frequency_mix(band)
+        if 1.0 - mix.get("M", 0.0) > C.NON_MONTHLY_LIMIT:
+            out.append(band)
+    return out
+
+
 def retention(m: Model, bands) -> str:
     states = []
+    withheld = _schedule_driven(m)
     for key in AGE_KEYS:
         ab = None if key == "All" else key
         curves, counts = {}, {}
-        for band in C.BAND_ORDER:
+        for band in C.CHART_ORDER:
+            if ab is not None and band in withheld:
+                continue
             curve = m.curve_at(band, ab)
             if curve is None:
                 continue
@@ -151,19 +187,30 @@ def retention(m: Model, bands) -> str:
             counts[band] = m.cell_n(band, ab)
         if not curves:
             continue
-        missing = [b for b in C.BAND_ORDER
-                   if b in m.band_rates and b not in curves]
+        missing = [b for b in C.CHART_ORDER
+                   if b in m.band_rates and b not in curves
+                   and not (ab is not None and b in withheld)]
         note = ("Labels show 12-month retention &rarr; year-10 retention. Solid "
                 "to month %d is observed; dashed beyond is projected."
                 % C.OBSERVED_MONTHS)
         if key != "All":
             note += " Showing only donors who were %s when they signed up." % key
         if missing:
-            note += (" %s %s not shown &mdash; too few donors in this age band."
+            note += (" %s %s not shown - too few donors in this age band."
                      % (", ".join(missing), "are" if len(missing) > 1 else "is"))
+        if ab is not None and withheld:
+            note += (" %s %s not shown by age: most of %s donors pay annually or "
+                     "quarterly, and the retention schedules for those donors are "
+                     "a single set of rates used at every age. They are reliable "
+                     "across all donors, which is why these bands appear in the "
+                     "<i>All</i> view, but they cannot tell us how a younger "
+                     "annual donor differs from an older one."
+                     % (", ".join(withheld),
+                        "are" if len(withheld) > 1 else "is",
+                        "their" if len(withheld) > 1 else "its"))
         states.append((
             key,
-            "Retention by gift amount — %s" % _age_label(key),
+            "Retention by gift amount - %s" % _age_label(key),
             G.retention_lines(curves, counts, C.LOW_BASE),
             note,
         ))
@@ -177,7 +224,7 @@ def agencies(m: Model, bands) -> str:
     vols = m.volumes()
 
     views = {}
-    for key in ["All"] + list(C.BAND_ORDER):
+    for key in ["All"] + list(C.CHART_ORDER):
         rows = []
         for agency in names:
             if key == "All":
@@ -196,7 +243,12 @@ def agencies(m: Model, bands) -> str:
                 cpa = m.cpa(agency, key)
                 if not np.isfinite(cpa):
                     continue
-                net = m.agency_net(agency, key) if share >= C.MIN_SHARE else None
+                if share < C.MIN_SHARE:
+                    # Too few donors to say anything: leave the agency off the
+                    # chart entirely rather than showing a cost with no value
+                    # beside it.
+                    continue
+                net = m.agency_net(agency, key)
                 sub = "%s%% of their donors · ×%.2f%s" % (
                     ("%.1f" % share) if share < 1 else ("%.0f" % round(share)),
                     float(m.cost_table.loc[agency, "cpa_factor"]),
@@ -210,19 +262,20 @@ def agencies(m: Model, bands) -> str:
 
     states = []
     for key, rows in views.items():
-        hidden = [a for a, _, net, _ in rows if net is None]
+        hidden = [a for a in names if a not in [r[0] for r in rows]]
         if key == "All":
-            title = "CPA and 10-year net LTV by agency — all gift values"
+            title = "CPA and 10-year net LTV by agency - all gift values"
             note = ("Each agency on its own fee rate, across every gift value "
                     "it acquires.")
         else:
-            title = "CPA and 10-year net LTV by agency — donors giving %s" % key
+            title = "CPA and 10-year net LTV by agency - donors giving %s" % key
             note = ("Each agency&rsquo;s own fee rate at %s, and what a donor at "
                     "that amount is worth to us net over ten years." % key)
         if hidden:
-            note += (" Net LTV is not shown for %s because %s fewer than %g%% of "
+            note += (" %s %s not shown because %s fewer than %g%% of "
                      "%s donors at this amount."
                      % (", ".join(hidden),
+                        "are" if len(hidden) > 1 else "is",
                         "they acquire" if len(hidden) > 1 else "it acquires",
                         C.MIN_SHARE, "their" if len(hidden) > 1 else "its"))
         states.append((key, title, G.agency_bars(rows, mx), note))
@@ -256,9 +309,12 @@ def _payback_months(m: Model, band: str, fee: float) -> tuple:
     return None, gross / fee
 
 
+PAYBACK_BANDS = ["€10", "€12–13", "€15", "€20"]
+
+
 def payback(m: Model, bands) -> str:
     rows = []
-    for band in C.BAND_ORDER:
+    for band in PAYBACK_BANDS:
         if band not in bands.index:
             continue
         fee = float(bands.loc[band, "blended_cpa"])
@@ -299,7 +355,7 @@ def fee_cap(m: Model, bands) -> str:
             rows.append((gift, gross - base_gross, factor * gift - factor * cap))
         states.append((
             agency,
-            "%s — what each step above the €%d cap is worth" % (agency, int(cap)),
+            "%s - what each step above the €%d cap is worth" % (agency, int(cap)),
             G.cap_steps(rows, cap),
             "Each step above €%d for one donor, on %s&rsquo;s own age profile and "
             "own fee rate. The fee under the cap does not move; the grey bar is "
@@ -357,17 +413,38 @@ def headroom(m: Model, bands) -> str:
 
 
 # -------------------------------------------- 11 · retention in reserve -----
+def _profile_curve(m: Model, band: str, profile: dict):
+    """A band's survival curve weighted across one agency's age profile."""
+    total, weight = None, 0.0
+    for ab, w in profile.items():
+        if w <= 0:
+            continue
+        c = m.curve(band, ab)
+        if c is None:
+            continue
+        total = w * c if total is None else total + w * c
+        weight += w
+    return total / weight if weight > 0 else None
+
+
 def _breakeven_retention(m: Model, agency: str, band: str,
                          target_net: float) -> float | None:
     """
     The 12-month retention at which a band stops beating the main ask.
 
+    Everything here is measured on the agency's own donors - their age profile
+    and their fee - because that is what it is being compared against. Valuing
+    the higher amount on the market as a whole while comparing it to this
+    agency's main ask would mix two different populations and understate the
+    margin.
+
     The curve is scaled through its cumulative hazard, which keeps the shape of
     the decay and pivots it on the twelve-month figure - the same adjustment
     the scenario planner makes when someone moves the retention lever.
     """
-    curve = m.curve_at(band)
-    gross = m.gross_ltv_at(band)
+    profile = m.age_profile(agency)
+    curve = _profile_curve(m, band, profile)
+    gross = m.gross_ltv_profile(band, profile)
     fee = m.cpa(agency, band)
     if curve is None or gross is None or not np.isfinite(fee):
         return None
@@ -398,10 +475,11 @@ def reserve(m: Model, bands) -> str:
         base_net = m.agency_net(agency, base)
         base_gift = C.BAND_GIFT.get(base, 0.0)
         rows = []
+        profile = m.age_profile(agency)
         for level in levels:
             if C.BAND_GIFT.get(level, 0.0) <= base_gift:
                 continue
-            curve = m.curve_at(level)
+            curve = _profile_curve(m, level, profile)
             if curve is None:
                 continue
             be = _breakeven_retention(m, agency, level, base_net)
@@ -412,7 +490,7 @@ def reserve(m: Model, bands) -> str:
             continue
         states.append((
             agency,
-            "Retention in reserve at %s — main ask %s" % (agency, base),
+            "Retention in reserve at %s - main ask %s" % (agency, base),
             G.reserve(rows),
             "How far twelve-month retention on the higher amount could fall "
             "before it stopped beating that agency&rsquo;s main ask on ten-year "
@@ -430,10 +508,9 @@ BUILDERS = {
     5: retention,
     6: agencies,
     7: net_ltv,
-    8: payback,
-    9: fee_cap,
-    10: headroom,
-    11: reserve,
+    8: fee_cap,
+    9: headroom,
+    10: reserve,
 }
 
 

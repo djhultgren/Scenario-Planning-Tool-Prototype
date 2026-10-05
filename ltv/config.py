@@ -37,6 +37,12 @@ OTHER_BAND = "Other"
 BAND_ORDER = [b for b, _ in GIFT_BANDS] + [OTHER_BAND]
 
 # Representative monthly gift used when pricing a band (fees are charged on this).
+# "Other" is a pooled catch-all rather than a price point we could ask for, so
+# it is left out of the charts and tables. It stays inside the headline totals,
+# which therefore cover every donor.
+POOLED_BAND = "Other"
+CHART_ORDER = None   # set below, once BAND_ORDER exists
+
 BAND_GIFT = {
     "€5": 5.0, "€8": 8.0, "€10": 10.0, "€12–13": 12.5,
     "€15": 15.0, "€20": 20.0, "€25": 25.0, "€30": 30.0,
@@ -103,6 +109,15 @@ MIN_SHARE = 1.0        # per cent of an agency's own donors
 # Two price points this close in share are treated as the same main ask, and
 # the lower one is used.
 MAIN_ASK_TOL = 2.0     # percentage points
+# An agency's main price points - bolded in the gift-mix table.
+MAIN_BAND_SHARE = 10.0  # per cent of that agency's donors
+
+# The annual and quarterly retention schedules are a single set of rates used
+# at every age. That is fair across all donors - they are all-age averages -
+# but applying them inside one age band assumes a donor of 25 lapses like a
+# donor of 60, which nothing here tests. Bands where more than this share of
+# donors pay non-monthly are therefore shown only in the all-ages view.
+NON_MONTHLY_LIMIT = 0.20
 
 # ------------------------------------------------------------- agencies -----
 # Maps the BINGO source code to an agency name. Codes not listed here are
@@ -140,6 +155,8 @@ THEMES = {
             "€12–13": "#8AA0AE", "€15": "#B5822B", "€20": "#12324A",
             "€25": "#C58B3A", "€30": "#2C6E9B", "Other": "#B9C4CC",
         },
+        # One colour per measure on the Figure 2 panel, in column order.
+        "panels": ["#12324A", "#5AA9CF", "#8FC9A9", "#B5822B", "#C8102E"],
     },
     "sci": {
         # Black #222221, Red #DA291C (Pantone 485), Teal #009CA6,
@@ -159,24 +176,31 @@ THEMES = {
             "€30": "#222221",     # Black
             "Other": "#999999",   # Light Grey
         },
+        "panels": ["#222221", "#009CA6", "#D1CCBD", "#F2A900", "#DA291C"],
     },
 }
 
 NAVY, RED, GREEN, MUT, LINE, LIGHT = THEMES[THEME]["palette"]
 BAND_COLOUR = dict(THEMES[THEME]["bands"])
+PANEL_COLOUR = list(THEMES[THEME]["panels"])
 TABLE_HEAD = "#009CA6"    # brand tables take a teal header; overridden below
 
 
 def apply_theme(name: str):
     """Switch the look. Call before building charts or the report."""
-    global THEME, NAVY, RED, GREEN, MUT, LINE, LIGHT, BAND_COLOUR, TABLE_HEAD
+    global THEME, NAVY, RED, GREEN, MUT, LINE, LIGHT
+    global BAND_COLOUR, PANEL_COLOUR, TABLE_HEAD
     if name not in THEMES:
         raise ValueError("unknown theme %r - choose from %s"
                          % (name, ", ".join(THEMES)))
     THEME = name
     NAVY, RED, GREEN, MUT, LINE, LIGHT = THEMES[name]["palette"]
     BAND_COLOUR = dict(THEMES[name]["bands"])
+    PANEL_COLOUR = list(THEMES[name]["panels"])
     TABLE_HEAD = "#009CA6" if name == "sci" else NAVY
 
 
 apply_theme(THEME)
+
+
+CHART_ORDER = [b for b in BAND_ORDER if b != POOLED_BAND]

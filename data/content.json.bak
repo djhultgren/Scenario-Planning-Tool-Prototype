@@ -1,0 +1,983 @@
+[
+ [
+  "h2",
+  "Executive summary"
+ ],
+ [
+  "p",
+  "NOTE: CURRENTLY IN DRAFT. WILL COMPLETE THIS SECTION ONCE SECTIONS 7&amp;8 ARE COMPLETE."
+ ],
+ [
+  "p",
+  "We will spend around €4.8m acquiring face-to-face agency donors in Germany this year. Those donors should give us €11.9m over the next ten years, <b>€7.0m in net income</b>."
+ ],
+ [
+  "p",
+  "Many things shape a donor’s LTV, but two matter most: <b>what we ask donors for</b>, and <b>who we ask</b>."
+ ],
+ [
+  "sub",
+  "What we ask for"
+ ],
+ [
+  "p",
+  "<b>€20 is the best acquisition value for three of our four agencies, on gross and net LTV alike</b>. It costs more to acquire, but the larger gift and strong retention more than cover it: <b>€617 net LTV over 10 years against €368 at €10.</b> That holds within every age band we can measure, so it is not an effect of €20 happening to attract older donors. However, the picture is more nuanced when we look at other acquisition values, we sometimes see differing pictures across age bands. For the under 30s for example, an annual gift of €60 (shown in the report as €5 per month) nets €128, whilst a gift of €12–13 a month, nets us €100 over 10 years."
+ ],
+ [
+  "sub",
+  "Who we ask"
+ ],
+ [
+  "p",
+  "<b>Age is the strongest single predictor of value</b>. On the same €10 ask, a donor acquired at 65 or over is worth €793 over ten years against €341 for one acquired under 30. It is why the same €20 ask is worth €1,112 at Trust and €882 at Apollon: only 4% of Trust’s donors are under 30, against 40% of Apollon’s."
+ ],
+ [
+  "p",
+  "<b>Interestingly, half of every under-30 we acquire comes from Apollon, and a quarter from Wesser</b> - our two most expensive rates buying our least valuable age group."
+ ],
+ [
+  "sub",
+  "The €20 fee cap"
+ ],
+ [
+  "p",
+  "<b>The cap at Trust and Activate saves us about €15,000 a year</b>. Less than 1% of their donors are acquired above €20, and with no fee to gain the agencies have little reason to ask for more. We cannot prove from the data that the cap is the cause, but it’s worth noting <b>Apollon, an agency without the fee cap, have proportionally acquired 4x the donors giving above €20 compared to Activate, and 10x compared to Trust.</b>"
+ ],
+ [
+  "h2",
+  "Methodology"
+ ],
+ [
+  "p",
+  "We take the donors our agencies acquired in Q1–Q2 2026, assume the same level of acquisitions in Q3–Q4 2026 and follow that group forward ten years, using how donors behaved 2022–2024 to allow us to factor in retention rates and upgrade rates. Costs come from the 2026 fee schedule, applied donor by donor at the acquiring agency’s own rate."
+ ],
+ [
+  "p",
+  "At the moment, acquisition strategy and gift values vary across the four agencies in Germany. Whilst we do look at an overall net LTV by using a blended CPA, it is also important to consider each agency separately, since each agency has different cost structures. The scenario modelling in section 7 will therefore look at how we can optimise income on an agency by agency basis."
+ ],
+ [
+  "p",
+  "The 2026 cohort is considerably older than 2022–2024, whom we model behaviour from — 44 years on average against 39, with 18% under 30 rather than 36%. The agencies also differ: Trust and Activate acquire donors averaging 47, Apollon and Wesser 38 and 39. Using historic behaviour unadjusted would understate this year’s donors, and comparing agencies without adjusting would credit Trust for being cheap when part of it is that they acquire older donors."
+ ],
+ [
+  "p",
+  "In the model, if Apollon moved donors to €20, we assume those donors stay Apollon’s age, they do not turn into Trust’s average donor age. Ultimately, we are assuming agencies continue to acquire at the current age levels."
+ ],
+ [
+  "p",
+  "We were not able to link back all donors to an agency, we had particularly low coverage for X agency donors [SN TO ADD AGENCY NAME]. We therefore built each agency’s gift mix and age profile from the donors we could attribute, scaling those patterns up to the full-year volumes."
+ ],
+ [
+  "p",
+  "Historic data was limited for non-monthly donors. Assumptions have been made about the behaviour of these donors and can be found in the appendix."
+ ],
+ [
+  "note",
+  "On the 10 year horizon - years 1 to 5 are observed based on historic donor trends. Years 6 to 10 are projected."
+ ],
+ [
+  "h2",
+  "The findings"
+ ],
+ [
+  "h3",
+  "1",
+  "Where we are today"
+ ],
+ [
+  "p",
+  "We expect to acquire 16,933 donors through four agencies this year. Around 77% of donors are acquired at €15 or below. 20% of donors are acquired at €20."
+ ],
+ [
+  "figure",
+  1,
+  "Total projected agency acquisitions in 2026, by gift amount",
+  ""
+ ],
+ [
+  "figure",
+  2,
+  "2026 acquisitions and the behaviours we’ve modelled",
+  "Volumes and age are 2026 actuals; retention and upgrade rates are historic, from the 2022–24 cohorts."
+ ],
+ [
+  "sub",
+  "2026 acquisitions by agency and gift amount"
+ ],
+ [
+  "p",
+  "Trust and Activate have €20 fee caps in place, yet less than 1% of their donors are acquired above this, suggesting there is little motivation for the agency to acquire above this price point."
+ ],
+ [
+  "p",
+  "Trust acquire 31% of donors at €20, whilst 72% of Activate’s donors are acquired at €12-13 ."
+ ],
+ [
+  "p",
+  "Wesser, acquires the majority of donors at €60 a year (shown below as €5 a month). Wesser’s high CPAs are offset by the high retention of their €60/year donors, meaning these donors perform well in terms of net LTV."
+ ],
+ [
+  "table",
+  "Table 1",
+  [
+   "Agency",
+   "€5",
+   "€8",
+   "€10",
+   "€12–13",
+   "€15",
+   "€20",
+   "€25",
+   "€30",
+   "Other"
+  ],
+  [
+   [
+    "Trust (capped)",
+    "2%",
+    "18%",
+    "32%",
+    "0.3%",
+    "15%",
+    "31%",
+    "0.1%",
+    "0.1%",
+    "2%"
+   ],
+   [
+    "Apollon (no cap)",
+    "0.2%",
+    "0.1%",
+    "0.3%",
+    "36%",
+    "45%",
+    "14%",
+    "0.2%",
+    "3%",
+    "1%"
+   ],
+   [
+    "Activate (capped)",
+    "0%",
+    "0.2%",
+    "0.4%",
+    "72%",
+    "22%",
+    "2%",
+    "0.5%",
+    "0.2%",
+    "3%"
+   ],
+   [
+    "Wesser (no cap)",
+    "63%",
+    "4%",
+    "22%",
+    "0.9%",
+    "2%",
+    "4%",
+    "1%",
+    "0.2%",
+    "4%"
+   ]
+  ]
+ ],
+ [
+  "takeaway",
+  "Less than 20% of total donors are acquired at €20, 3 in 4 donors are acquired under €15.",
+  "Takeaway"
+ ],
+ [
+  "h3",
+  "2",
+  "What a donor gives us"
+ ],
+ [
+  "p",
+  "Gross LTV rises steadily with the ask."
+ ],
+ [
+  "figure",
+  3,
+  "",
+  ""
+ ],
+ [
+  "takeaway",
+  "For donors 40+, the trend is clear: Gross LTV climbs with price point. However, for donors under 40 there are two exceptions: €12–13 sits marginally below €10, and €25 below €20.",
+  "Takeaway"
+ ],
+ [
+  "h3",
+  "3",
+  "Who we ask matters more than what we ask"
+ ],
+ [
+  "p",
+  "Everything in this section is based on Gross LTV. Cost is deliberately left out, because the agencies charge very different rates and they acquire very different age groups, so a net figure by age would be measuring both at once. We come to that in the next section."
+ ],
+ [
+  "figure",
+  4,
+  "12m retention and gross LTV by age at sign-up",
+  ""
+ ],
+ [
+  "p",
+  "A donor acquired at 50 or over on €10 a month gives us €754 over ten years. One acquired under 30 on €20 gives us €571. The higher ask buys us almost nothing if we are asking a younger person."
+ ],
+ [
+  "p",
+  "Trust acquire donors averaging 47 and Apollon 38. Looking at Trust in the age table below and it barely moves — 43 to 47, whatever they ask for. So a good part of what makes Trust’s donors worth so much is because they are acquiring older donors."
+ ],
+ [
+  "sub",
+  "Average age of donors per gift amount and agency"
+ ],
+ [
+  "table",
+  "Table 2",
+  [
+   "Agency",
+   "€5",
+   "€8",
+   "€10",
+   "€12–13",
+   "€15",
+   "€20",
+   "€30"
+  ],
+  [
+   [
+    "Trust",
+    "43",
+    "46",
+    "47",
+    "—",
+    "47",
+    "47",
+    "—"
+   ],
+   [
+    "Apollon",
+    "—",
+    "—",
+    "—",
+    "37",
+    "37",
+    "40",
+    "43"
+   ],
+   [
+    "Activate",
+    "—",
+    "—",
+    "—",
+    "46",
+    "49",
+    "—",
+    "—"
+   ],
+   [
+    "Wesser",
+    "35",
+    "54",
+    "46",
+    "—",
+    "—",
+    "49",
+    "—"
+   ],
+   [
+    "All agencies",
+    "36",
+    "46",
+    "47",
+    "41",
+    "42",
+    "46",
+    "45"
+   ]
+  ]
+ ],
+ [
+  "sub",
+  "Gross LTV of donors per gift amount and agency — actuals"
+ ],
+ [
+  "p",
+  "What each donor gives us over ten years, valued on that agency’s own age profile."
+ ],
+ [
+  "table",
+  "Table 3",
+  [
+   "Agency",
+   "€5",
+   "€8",
+   "€10",
+   "€12–13",
+   "€15",
+   "€20",
+   "€30"
+  ],
+  [
+   [
+    "Trust",
+    "€421",
+    "€489",
+    "€624",
+    "—",
+    "€831",
+    "€1,112",
+    "—"
+   ],
+   [
+    "Apollon",
+    "—",
+    "—",
+    "—",
+    "€537",
+    "€666",
+    "€882",
+    "€1,240"
+   ],
+   [
+    "Activate",
+    "—",
+    "—",
+    "—",
+    "€647",
+    "€810",
+    "€1,092",
+    "—"
+   ],
+   [
+    "Wesser",
+    "€358",
+    "€404",
+    "€524",
+    "—",
+    "€689",
+    "€915",
+    "—"
+   ]
+  ]
+ ],
+ [
+  "sub",
+  "Retention, and how often people pay"
+ ],
+ [
+  "figure",
+  5,
+  "",
+  ""
+ ],
+ [
+  "p",
+  "Retention does not decline as we ask for more, which is what you might expect. In fact, donors giving €20 hold up slightly better at 12 months than donors giving €15 or €12–13."
+ ],
+ [
+  "p",
+  "€5 sits well above everything else, but this is because these donors are almost entirely €60-a-year payers, and annual payers retain better — it tells us more about how they pay than what they give."
+ ],
+ [
+  "p",
+  "It is worth noting that age moves retention far more than the amount does: within any single gift level, 12-month retention swings by around 30 points between our youngest and oldest donors."
+ ],
+ [
+  "note",
+  "Note: Confidence on the €12–13 price point is lower than others due to a low historic base."
+ ],
+ [
+  "takeaway",
+  "Retention holds up as the ask rises — €20 retains as well at 12 months as €15 and €12–13, and better by year ten. Age is what moves retention, not the amount, so a higher ask costs us very little in retention compared with who we are asking.",
+  "Takeaway"
+ ],
+ [
+  "h3",
+  "4",
+  "What we pay for donors"
+ ],
+ [
+  "p",
+  "We will spend €4.8m to raise €11.9m from the 2026 cohort of donors. This section will explore these costs in more detail. Looking at averages across the four agencies hides the fact they charge very different rates, and they barely overlap in who they acquire (in gift value terms). So let’s start by looking at the CPA and Net LTV per agency, and then what that means in terms of net LTV for donors."
+ ],
+ [
+  "figure",
+  6,
+  "",
+  ""
+ ],
+ [
+  "table",
+  "Table 4",
+  [
+   "Agency",
+   "2026 donors",
+   "Avg monthly gift",
+   "Avg CPA",
+   "CPA factor",
+   "Total costs",
+   "Net income (10y)",
+   "Net LTV (10y)"
+  ],
+  [
+   [
+    "Trust (capped)",
+    "8,316",
+    "€14",
+    "€272",
+    "×19.97",
+    "€2,261,320",
+    "€4,310,141",
+    "€518"
+   ],
+   [
+    "Apollon (no cap)",
+    "3,468",
+    "€16",
+    "€366",
+    "×24.01",
+    "€1,269,753",
+    "€1,043,066",
+    "€301"
+   ],
+   [
+    "Activate (capped)",
+    "2,675",
+    "€13",
+    "€280",
+    "×20.86",
+    "€747,929",
+    "€1,139,101",
+    "€426"
+   ],
+   [
+    "Wesser (no cap)",
+    "2,474",
+    "€8",
+    "€230",
+    "×29.65",
+    "€567,997",
+    "€544,972",
+    "€220"
+   ],
+   [
+    "All four",
+    "16,933",
+    "—",
+    "—",
+    "—",
+    "€4,846,999",
+    "€7,037,281",
+    "—"
+   ]
+  ]
+ ],
+ [
+  "p",
+  "Trust are the strongest on price — the lowest CPA factor, acquiring the widest range of price points and the highest share of donors at €20. Apollon are the most expensive. Wesser cost the most per euro of gift and acquire the smallest gifts, but nine in ten of their donors pay annually and annual payers retain better."
+ ],
+ [
+  "p",
+  "Half of our under-30s come from Apollon, who charge ×24.01 with no cap, and a quarter from Wesser at ×29.65. So the age group that stays the shortest is also the one we pay the most for. In summary, acquiring younger donors costs more and returns less at the same time."
+ ],
+ [
+  "figure",
+  7,
+  "",
+  ""
+ ],
+ [
+  "note",
+  "<b>Important caveat.</b> These net LTV figures are across all four agencies, so they carry a <b>blended CPA</b> — the volume-weighted average of what the four agencies charge at each amount. Because the agencies do not spread evenly across the price points, that blend is not identical at every level: €5 is dominated by Wesser at ×29.65 while €20 is mostly Trust at ×19.97. Any figure looked at <i>per agency</i> in this report uses that agency’s own rate instead. Use the blended view to compare amounts, not to price an individual agency."
+ ],
+ [
+  "takeaway",
+  "On average, €20 a month nets €654 over ten years, against €419 at €15 and €391 at €10. Note €12–13 and €25 are outliers but must be treated with caution (behavioural assumptions on these values are from a low base).",
+  "Takeaway"
+ ],
+ [
+  "figure",
+  8,
+  "How long a donor takes to pay for themselves",
+  "Months of giving before the donor has covered the agency fee we paid to acquire them. Every amount on the same age profile."
+ ],
+ [
+  "p",
+  "Looking at ROI and breakeven highlights the lower performance of donors giving €12–13. They take longer to break even than donors giving less (€10). We should monitor the retention rates of these donors closely. They have historically had poor retention rates, though we also have a lower base of these donors. Is there something here about the agency acquiring them? What is it about this giving amount that results in poorer performance?"
+ ],
+ [
+  "p",
+  "For future: Further analysis needed to better understand donors giving €12–13. Lack of historic data means low confidence on this group of donors behaviour."
+ ],
+ [
+  "takeaway",
+  "€12–13 takes 39 months to cover its own fee against 30 months at €10 — the only price point that takes longer to pay back than asking for less. It occupies a fifth of the acquisitions and returns 2.16x against €10’s 2.75x.",
+  "Takeaway"
+ ],
+ [
+  "h3",
+  "5",
+  "The fee cap"
+ ],
+ [
+  "p",
+  "The €20 fee cap is currently in place for two agencies — Trust and Activate. It currently saves us around €15k in agency fees (€11,955 for Trust, €2,879 for Activate). Today, 0.3% of Trust’s donors are acquired above €20 and 0.9% of Activate’s donors are above €20. In contrast the uncapped agencies, Apollon are acquiring 3.7% of donors above €20 and Wesser are acquiring 2.2% of donors above €20 (though note Wesser’s focus is already on donors in the lower bands). This suggests that the current fee cap is preventing us from acquiring donors in the higher bands."
+ ],
+ [
+  "p",
+  "We can compare below, the additional income raised by donors at higher gift levels and compare that to the extra agency fee we would be subject to pay. We can see that there is no gain on €20 &gt; €25. We actually lose €3 net for Trust donors and €28 net for Activate. However — things get interesting when we look at the donors giving €30 plus — suddenly, the gain in extra income outweighs the additional agency fee. This is true for both Trust and Activate."
+ ],
+ [
+  "figure",
+  9,
+  "",
+  "Each step above €20 for one donor, on that agency’s own age profile and own fee rate. The red bar is the extra fee under the cap, which is always zero; the grey bar is what the fee would be without it."
+ ],
+ [
+  "note",
+  "<b>Caveat:</b> The historic donor pool of the retention rates of donors giving €25 is small and the retention rates are unusually low. It is possible that the retention rate of €25 donors will be higher in future. We should treat the €25 donor trends as indicative."
+ ],
+ [
+  "p",
+  "Agencies without a fee cap acquire noticeably more donors above €20 than those with one. Can we ask Trust and Activate to test pushing higher gifts with the current fee cap in place? If the answer is no, because they won’t have the motivation to sell at that level, we should consider removing the fee cap. The expectation being that without it, we can acquire a higher number of donors at higher levels, resulting in a higher net LTV and net income. Removing the cap should come with a commitment by agencies to offer the higher amount and to report how often it converts. <b>We should ask agencies to offer €20 and €30 price points to donors, since the additional income received from donors giving €25 is not enough to outweigh the additional cost.</b>"
+ ],
+ [
+  "takeaway",
+  "Agencies without a fee cap acquire noticeably more donors above €20 than those with one. Can we ask Trust and Activate to test pushing higher gifts with the current fee cap in place? If not, we should consider removing it.",
+  "Key takeaway"
+ ],
+ [
+  "h3",
+  "6",
+  "Scenarios: Acquisition and Retention — what we could gain, and what we could afford to lose"
+ ],
+ [
+  "p",
+  "Later in the report, we will look at different scenarios to explore how we can optimise net income. However this section will simply look to understand the trade-offs and what level of trade-off is acceptable before acquiring at higher values is no longer worth it, i.e. the breakeven points."
+ ],
+ [
+  "sub",
+  "What we could afford to lose: acquisition"
+ ],
+ [
+  "note",
+  "<b><i>Disclaimer before reading:</i></b> <i>The figures quoted across the acquisition and retention sections here, should be viewed in isolation, e.g. we are saying we could accept a 20% drop in acquisition or a 7pt drop in retention — not both. It also assumes the fee caps stays in place. If fees increased, the numbers may shift though we wouldn’t expect a change in trends.</i>"
+ ],
+ [
+  "p",
+  "For the sake of argument, lets assume that each agency is going to acquire 1,000 donors at its main ask level, this will be our reference point."
+ ],
+ [
+  "figure",
+  10,
+  "",
+  "Price points where an agency acquires fewer than 1% of its donors are hidden. Each agency is valued on its own age profile and charged its own fee."
+ ],
+ [
+  "p",
+  "We can see that for Trust, Apollon and Activate, we could accept a circa 20–40% drop in acquisition before the extra income is no longer worth it. The % depends on the increase in ask. For Trust for example, we could allow a drop of 20% if acquiring donors at €15 instead of €10, or a 40% drop if acquiring donors at €20 instead of €10."
+ ],
+ [
+  "p",
+  "The only exception is Wesser where high fees and high retention of current donors means an increase in price point either result in needing to acquire a higher volume of donors, or only around an 8–14% drop being acceptable. The €20 ask is an exception to this."
+ ],
+ [
+  "sub",
+  "What we could afford to lose: retention"
+ ],
+ [
+  "p",
+  "Repeating the same exercise, but this time for retention. We can see below the drops in retention we can accept in order to break even. Again, we look at the agencies main ask as our reference point."
+ ],
+ [
+  "figure",
+  11,
+  "",
+  "How far twelve-month retention on the higher amount could fall before it stopped beating that agency’s main ask on ten-year net value."
+ ],
+ [
+  "takeaway",
+  "At Trust and Activate a €20 ask could lose 16 points of 12M retention vs their current main asks. Apollon has the least room at 6 points, because they already start from €15. Wesser has 7pts for a €20 ask, but very little room to spare at other levels.",
+  "Takeaway"
+ ],
+ [
+  "h3",
+  "7",
+  "Scenarios: How we could grow our income"
+ ],
+ [
+  "empty",
+  "Left empty for now — to be added shortly."
+ ],
+ [
+  "h3",
+  "8",
+  "What we should ask for"
+ ],
+ [
+  "flag",
+  "<b>Claude:</b> numbers below double-checked against the model and now cite the all-age-group figures — no age-adjusted figures are used anywhere in this report."
+ ],
+ [
+  "flag",
+  "<b>Claude draft — please rewrite.</b> Everything below is drafted from the findings in sections 1 to 6, not written by Sarah. It is here so the report ends on an ask rather than on evidence. Numbers are live from the model; the judgement calls are mine and should be replaced with yours."
+ ],
+ [
+  "sub",
+  "1. Move the ask up, agency by agency"
+ ],
+ [
+  "p",
+  "€20 returns €654 in net LTV against €391 at €10 — and it does so within every age band we can measure, from under-30s through to 65+. This is the single clearest finding in the report and it does not depend on any modelling assumption we tested. Trust already place 31% of donors at €20; Activate place 2%. The gap between those two numbers is the opportunity."
+ ],
+ [
+  "sub",
+  "2. Fix €12–13 before anything else"
+ ],
+ [
+  "p",
+  "€12–13 returns €326 against €391 at €10, despite the larger ask, and takes 39 months to cover its own fee against 30 months at €10. It is the only rung on the ladder that pays back more slowly than asking for less, and it occupies 19% of the file. Activate acquire 72% of their donors there and Apollon 36%. Moving that volume to €15 or €20 is worth more than any other single change available to us."
+ ],
+ [
+  "sub",
+  "3. Price the age mismatch into the negotiation"
+ ],
+ [
+  "p",
+  "Half of every under-30 we acquire comes from Apollon, who charge ×24.01 with no cap, and a further 28% from Wesser at ×29.65. We are paying the most for the age group that stays the shortest. Either those rates come down, or the age profile those agencies acquire has to come up — the current combination is the worst of both."
+ ],
+ [
+  "sub",
+  "4. Test the fee cap before removing it"
+ ],
+ [
+  "p",
+  "The cap saves us roughly €15,000 a year. That is small next to the income sitting behind it, but the evidence that the cap is what suppresses higher-value acquisition is suggestive rather than proven — card design and the cap cannot be separated in the data, and only 109 donors sit above €20 in total. The sequenced approach in section 5 is the right one: ask Trust and Activate to test higher asks with the cap still in place, and treat a refusal as the answer to the question."
+ ],
+ [
+  "sub",
+  "5. What to claim, and what not to"
+ ],
+ [
+  "p",
+  "The ranking of gift amounts and of agencies holds under every stress test we ran — cutting tail retention by a fifth, removing upgrades, applying mortality, discounting, and truncating to five years. €20 came top in all of them. The totals are far less firm: ten-year net income moves between roughly €3.2m and €7.0m depending on those same assumptions, and 67% of net income arrives after month 60, where the data is projected rather than observed. Argue confidently about which ask and which agency. Be careful arguing about how much."
+ ],
+ [
+  "h2",
+  "Appendix I — Assumptions"
+ ],
+ [
+  "list",
+  [
+   "<b>2026 volumes.</b> The first half is actual; the second half assumes the same pattern repeats. Volumes are scaled agency by agency to the realised-donor counts in the cost file, because the donor extract is incomplete and unevenly so.",
+   "<b>Behaviour comes from the 2022–24 cohorts, weighted to the 2026 age profile.</b> The 2026 cohort averages 43.8 years against 39.1 historically, so retention and LTV at each gift amount are re-weighted to the ages we are actually acquiring at that amount.",
+   "<b>Everything is a monthly equivalent.</b> Annual, quarterly and twice-yearly pledges are divided down. This is what the fee is charged on.",
+   "<b>Nine groups are modelled</b> — €5, €8, €10, €12–13, €15, €20, €25, €30 and a pooled “Other” — so every donor is included.",
+   "<b>We should consider the €12–13 and €25 price points with caution</b> — the behaviour of these donors has been modelled from a low base.",
+   "<b>Upgrades happen within the first year.</b> Where a donor’s latest gift is higher than their first, the increase applies from month 13. Downgrades affect about 1% of donors and are not modelled.",
+   "<b>Retention beyond month 24 is age-specific.</b> Each age band uses its own observed year 3, 4 and 5 retention, from the 2019–22 acquisition cohorts.",
+   "<b>Years 6 to 10 are modelled, not observed.</b> A curve is fitted per age band to the five observed years and projected forward. No mortality adjustment is applied, so the 65+ figures should be read as an upper bound.",
+   "<b>The scenarios move people, not profiles.</b> Donors moved to a different amount keep the behaviour of that amount at their own agency’s cost."
+  ]
+ ],
+ [
+  "list",
+  [
+   "<b>Each donor carries their own agency’s fee.</b> Costs are not averaged across the four.",
+   "<b>The €20 cap applies to Trust and Activate only.</b>",
+   "<b>Fee rates are taken from the 2026 cost file as supplied.</b>",
+   "<b>Historic behaviour cannot be split by agency.</b> Differences between agencies come from what they charge and who they acquire, not from how their donors behave afterwards.",
+   "<b>Acquisition cost only.</b> Development costs are not included."
+  ]
+ ],
+ [
+  "h2",
+  "Appendix II — Reference tables"
+ ],
+ [
+  "sub",
+  "Table A1 — Upgrades and downgrades"
+ ],
+ [
+  "table",
+  "",
+  [
+   "Monthly gift",
+   "Upgraded",
+   "Average increase",
+   "Downgraded"
+  ],
+  [
+   [
+    "€5",
+    "6.6%",
+    "€5.23",
+    "0.4%"
+   ],
+   [
+    "€8",
+    "6.3%",
+    "€3.64",
+    "0.0%"
+   ],
+   [
+    "€10",
+    "3.4%",
+    "€7.28",
+    "0.4%"
+   ],
+   [
+    "€12–13",
+    "4.0%",
+    "€6.25",
+    "0.8%"
+   ],
+   [
+    "€15",
+    "4.3%",
+    "€6.77",
+    "1.7%"
+   ],
+   [
+    "€20",
+    "4.8%",
+    "€9.69",
+    "1.7%"
+   ],
+   [
+    "€25",
+    "6.6%",
+    "€11.75",
+    "3.6%"
+   ],
+   [
+    "€30",
+    "3.9%",
+    "€11.55",
+    "3.2%"
+   ],
+   [
+    "Other",
+    "6.9%",
+    "€11.01",
+    "2.2%"
+   ]
+  ]
+ ],
+ [
+  "sub",
+  "Table A2 — CPA by agency and gift amount"
+ ],
+ [
+  "table",
+  "",
+  [
+   "Agency",
+   "€5",
+   "€8",
+   "€10",
+   "€12–13",
+   "€15",
+   "€20",
+   "€25",
+   "€30",
+   "Other"
+  ],
+  [
+   [
+    "Trust (×19.97, capped)",
+    "€100",
+    "€161",
+    "€200",
+    "€251",
+    "€300",
+    "€399",
+    "€399",
+    "€399",
+    "€334"
+   ],
+   [
+    "Apollon (×24.01, no cap)",
+    "€120",
+    "€193",
+    "€240",
+    "€301",
+    "€360",
+    "€480",
+    "€600",
+    "€720",
+    "€402"
+   ],
+   [
+    "Activate (×20.86, capped)",
+    "€104",
+    "€168",
+    "€209",
+    "€262",
+    "€313",
+    "€417",
+    "€417",
+    "€417",
+    "€349"
+   ],
+   [
+    "Wesser (×29.65, no cap)",
+    "€148",
+    "€238",
+    "€296",
+    "€372",
+    "€445",
+    "€593",
+    "€741",
+    "€890",
+    "€496"
+   ],
+   [
+    "Blended, as used in the model",
+    "€143",
+    "€164",
+    "€213",
+    "€287",
+    "€332",
+    "€415",
+    "€636",
+    "€693",
+    "€355"
+   ]
+  ]
+ ],
+ [
+  "note",
+  "The blended row is used only where a figure covers all four agencies at once. Every per-agency figure in this report uses that agency’s own rate."
+ ],
+ [
+  "sub",
+  "Table A3 — Cost per sign-up by agency and gift amount"
+ ],
+ [
+  "table",
+  "",
+  [
+   "Agency",
+   "€5",
+   "€8",
+   "€10",
+   "€12–13",
+   "€15",
+   "€20",
+   "€25",
+   "€30",
+   "Other"
+  ],
+  [
+   [
+    "Trust (×15.85)",
+    "€79",
+    "€127",
+    "€158",
+    "€199",
+    "€238",
+    "€317",
+    "€317",
+    "€317",
+    "€265"
+   ],
+   [
+    "Apollon (×17.29)",
+    "€86",
+    "€139",
+    "€173",
+    "€217",
+    "€259",
+    "€346",
+    "€432",
+    "€519",
+    "€289"
+   ],
+   [
+    "Activate (×16.30)",
+    "€82",
+    "€131",
+    "€163",
+    "€205",
+    "€244",
+    "€326",
+    "€326",
+    "€326",
+    "€273"
+   ],
+   [
+    "Wesser (×22.13)",
+    "€111",
+    "€178",
+    "€221",
+    "€278",
+    "€332",
+    "€443",
+    "€553",
+    "€664",
+    "€371"
+   ]
+  ]
+ ],
+ [
+  "sub",
+  "Table A4 — Age by agency"
+ ],
+ [
+  "p",
+  "Half of every under-30 we acquire comes from Apollon and another quarter from Wesser. From 30 upwards it reverses, and roughly two thirds of every older age band comes from Trust."
+ ],
+ [
+  "table",
+  "",
+  [
+   "Age at sign-up",
+   "Trust",
+   "Apollon",
+   "Activate",
+   "Wesser"
+  ],
+  [
+   [
+    "18–29",
+    "15%",
+    "50%",
+    "7%",
+    "28%"
+   ],
+   [
+    "30–39",
+    "66%",
+    "19%",
+    "5%",
+    "10%"
+   ],
+   [
+    "40–49",
+    "68%",
+    "16%",
+    "8%",
+    "9%"
+   ],
+   [
+    "50–64",
+    "71%",
+    "13%",
+    "9%",
+    "8%"
+   ],
+   [
+    "65+",
+    "63%",
+    "13%",
+    "10%",
+    "14%"
+   ]
+  ]
+ ]
+]

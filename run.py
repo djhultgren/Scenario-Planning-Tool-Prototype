@@ -6,11 +6,14 @@ Run the whole pipeline.
     python run.py --validate     # also run reconciliation, holdout, sensitivity
     python run.py --extract      # re-read data/report_source.html into content.json
     python run.py --theme sci    # the same report in the Save the Children brand
+    python run.py --word         # also write a .docx for comments
 
 Outputs land in out/.
 """
 import argparse
 import json
+import subprocess
+from pathlib import Path
 
 import pandas as pd
 
@@ -30,6 +33,8 @@ def main():
                     help="flag figures in the narrative that the model no longer produces")
     ap.add_argument("--theme", choices=sorted(C.THEMES), default=C.THEME,
                     help="report styling: 'house' or 'sci' (Save the Children brand)")
+    ap.add_argument("--word", action="store_true",
+                    help="also write a .docx, with one picture per figure")
     args = ap.parse_args()
 
     C.apply_theme(args.theme)
@@ -65,7 +70,20 @@ def main():
     print("scenario planner ->", planner.build(m))
     if content_mod.CONTENT_FILE.exists():
         name = "report.html" if args.theme == "house" else "report_%s.html" % args.theme
-        print("report        ->", report.build(m, path=C.OUT / name))
+        html = report.build(m, path=C.OUT / name)
+        print("report        ->", html)
+        if args.word:
+            from ltv import word
+            word.build(m, bands)
+            docx = C.OUT / ("report.docx" if args.theme == "house"
+                            else "report_%s.docx" % args.theme)
+            rc = subprocess.run(
+                ["node", str(Path(__file__).parent / "tools" / "mkword.js"),
+                 html, str(C.OUT / "word_content.json"), str(docx)])
+            if rc.returncode == 0:
+                print("word          ->", docx)
+            else:
+                print("word build failed - is node installed, with docx available?")
 
     pd.set_option("display.width", 200)
     print("\n" + bands[["donors", "gross_ltv", "blended_cpa", "net_ltv"]]
